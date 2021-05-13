@@ -3,48 +3,81 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Oyooni.Server.Extensions;
+using Oyooni.Server.Hubs;
+using Oyooni.Server.Middlewares;
 
 namespace Oyooni.Server
 {
+    /// <summary>
+    /// Represents the initialization class used to configure the services and the request pipeline
+    /// </summary>
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Startup"/> class
+        /// </summary>
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Configures the services collection by added application-required services
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Oyooni.Server", Version = "v1" });
-            });
+            // Run all dependenceis installers
+            services.RunDependenciesInstallers(Configuration, WebHostEnvironment);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <summary>
+        /// Configures the request pipeline by using several middlewares and handlers
+        /// </summary>
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            // If we are in the development environment
+            if (WebHostEnvironment.IsDevelopment())
             {
+                // Use detailed exception page
                 app.UseDeveloperExceptionPage();
+
+                // Use swagger
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Oyooni.Server v1"));
+
+                // Set swagger options
+                app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Oyooni.Server v1"));
             }
 
+            // Use global exception handling middleware
+            app.UseMiddleware<ExceptionsHandlingMiddleware>();
+
+            // Use http redirection
             app.UseHttpsRedirection();
 
+            // Use routing
             app.UseRouting();
 
+            // Use cors
+            app.UseCors("DefaultCorsPolicy");
+
+            // Use Authentication
+            app.UseAuthentication();
+
+            // Use Authorization
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                // Map controllers according to the Routes
                 endpoints.MapControllers();
+
+                // Map the SignalR hub
+                endpoints.MapHub<ApplicationHub>("/hub");
             });
         }
     }
