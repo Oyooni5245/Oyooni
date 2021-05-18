@@ -23,6 +23,23 @@ namespace Oyooni.Server.Constants
             public const string PasswordMustHaveUppercase = "Password must have upper case character(s)";
             public const string PasswordMustHaveLowercase = "Password must have lower case character(s)";
             public const string MinLengthPassword = "Password must be at least 6 characters long";
+            public const string PasswordRequired = "Password is required";
+        }
+
+        /// <summary>
+        /// General validation responses
+        /// </summary>
+        public static class General
+        {
+            public const string InvalidDayOfWeekId = "Invalid day of week identifier";
+        }
+
+        /// <summary>
+        /// AvailableTimes-Specific validation responses
+        /// </summary>
+        public static class AvailableTimes
+        {
+            public const string InvalidFrom = "'From' value can't be greater than or equal to the 'To' value";
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Oyooni.Server.Middlewares
         /// <summary>
         /// Handles the passed exception
         /// </summary>
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             // Initial status code
             var statusCode = (int)HttpStatusCode.InternalServerError;

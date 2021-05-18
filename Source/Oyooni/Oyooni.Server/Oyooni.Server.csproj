@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Resources\Localization\" />
     <Folder Include="wwwroot\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
 </Project>

@@ -20,6 +20,6 @@ namespace Oyooni.Server.Data.BusinessModels
         /// <summary>
         /// Checks whether the current object belongs to the passed user identifier
         /// </summary>
-        public bool BelongsTo(string userId) => UserId != userId;
+        public bool BelongsTo(string userId) => UserId == userId;
     }
 }

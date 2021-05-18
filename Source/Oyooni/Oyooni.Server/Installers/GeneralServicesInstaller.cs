@@ -25,6 +25,9 @@ namespace Oyooni.Server.Installers
             // Add signalR
             services.AddSignalR();
 
+            // Add localization
+            services.AddLocalization();
+
             // Return the services collection
             return services;
         }

@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Oyooni.Server.Common;
 using Oyooni.Server.Constants;
 using Oyooni.Server.Dtos.Accounts;
 using Oyooni.Server.Extensions;
+using Oyooni.Server.Queries.Accounts;
 using Oyooni.Server.Requests.Accounts;
 using System.Net;
 using System.Threading;
@@ -22,7 +24,7 @@ namespace Oyooni.Server.Controllers
         /// Default constructor
         /// </summary>
         /// <param name="mediator">The <see cref="IMediator"/> service</param>
-        public AccountsController(IMediator mediator) : base(mediator) { }
+        public AccountsController(IMediator mediator, IStringLocalizer<Program> localizer) : base(mediator, localizer) { }
 
         [HttpPost]
         [AllowAnonymous]
@@ -65,6 +67,31 @@ namespace Oyooni.Server.Controllers
 
             // Return an ok result with the resulting data
             return ApiOk(data: result);
+        }
+
+        [HttpGet]
+        [Route(ApiRoutes.Accounts.Profile)]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<AppUserDto>))]
+        public async Task<IActionResult> GetProfile(CancellationToken token = default)
+        {
+            // Send a get profile query
+            var result = await _mediator.Send(new GetProfile.Request(), token);
+
+            // return the ok result with the resulting data
+            return ApiOk(data: result.ToAppUserDto(), message: Responses.Accounts.ProfileRetrieved);
+        }
+
+        [HttpPut]
+        [Route(ApiRoutes.Accounts.Profile)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<AppUserDto>))]
+        public async Task<IActionResult> EditProfile(EditProfileRequest request, CancellationToken token = default)
+        {
+            // Send an Edit profile command
+            var result = await _mediator.Send(request.ToMediatorRequest(), token);
+
+            // Return the resulting data
+            return ApiOk(data: result.ToAppUserDto(), message: Responses.Accounts.ProfileUpdateSuccess);
         }
     }
 }

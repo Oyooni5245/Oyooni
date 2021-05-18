@@ -7,7 +7,7 @@ namespace Oyooni.Server.Exceptions
     /// <summary>
     /// Represents the base application exception
     /// </summary>
-    public abstract class BaseException : Exception
+    public class BaseException : Exception
     {
         /// <summary>
         /// The <see cref="HttpStatusCode"/> as an integer

@@ -37,5 +37,10 @@ namespace Oyooni.Server.Data.BusinessModels
         /// The refresh tokens related to the user
         /// </summary>
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+
+        /// <summary>
+        /// The available times related to the user
+        /// </summary>
+        public virtual ICollection<AvailableTime> AvailableTimes { get; set; }
     }
 }

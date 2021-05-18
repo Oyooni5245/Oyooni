@@ -27,6 +27,19 @@ namespace Oyooni.Server.Constants
             public const string InvalidRefresh = "Invalid refresh attempt";
             public const string SignupSuccess = "Registration successful";
             public const string AlreadyExist = "Email/Username is taken";
+            public const string ProfileUpdateSuccess = "Profile has been updated successully";
+            public const string ProfileRetrieved = "Profile has been retrieved successully";
+
+        }
+
+        public static class AvailableTimes
+        {
+            public const string SameTimeExists = "Time already exists";
+            public const string TimeAlreadyCovered = "Time is already containd in your available times";
+            public const string TimeNotFound = "The available time does not exist";
+            public const string TimeDeleted = "The available time has been deleted successully";
+            public const string AvailableTimesRetrieved = "Available times have been retrieved successfully";
+            public const string TimeAdded = "Available time has been added successfully";
         }
     }
 }

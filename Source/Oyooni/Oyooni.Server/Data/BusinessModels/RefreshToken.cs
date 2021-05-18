@@ -3,7 +3,7 @@
 namespace Oyooni.Server.Data.BusinessModels
 {
     /// <summary>
-    /// Represents a refresh token entity
+    /// Represents a refresh token business entity
     /// </summary>
     public class RefreshToken : AuditableEntity
     {

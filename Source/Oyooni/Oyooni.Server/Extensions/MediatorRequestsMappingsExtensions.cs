@@ -1,5 +1,8 @@
 ﻿using Oyooni.Server.Commands.Accounts;
+using Oyooni.Server.Commands.AvailableTimes;
 using Oyooni.Server.Requests.Accounts;
+using Oyooni.Server.Requests.AvailableTimes;
+using System;
 
 namespace Oyooni.Server.Extensions
 {
@@ -25,5 +28,11 @@ namespace Oyooni.Server.Extensions
         /// </summary>
         public static Signup.Request ToMediatorRequest(this SignupRequest request)
             => new Signup.Request(request.FirstName, request.LastName, request.Email, request.Password);
+
+        public static EditProfile.Request ToMediatorRequest(this EditProfileRequest request)
+            => new EditProfile.Request(request.FirstName, request.LastName);
+
+        public static AddAvailableTime.Request ToMediatorRequest(this AddAvailableTimeRequest request)
+            => new AddAvailableTime.Request((DayOfWeek)request.DayOfWeekId, request.From, request.To);
     }
 }

@@ -21,6 +21,11 @@ namespace Oyooni.Server.Data
         DbSet<RefreshToken> RefreshTokens { get; set; }
 
         /// <summary>
+        /// The available times db set
+        /// </summary>
+        DbSet<AvailableTime> AvailableTimes { get; set; }
+
+        /// <summary>
         /// Saves changes to the database synchronously
         /// </summary>
         /// <param name="userId">current user identifier</param>

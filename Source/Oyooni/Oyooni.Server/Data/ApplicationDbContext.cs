@@ -28,6 +28,11 @@ namespace Oyooni.Server.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         /// <summary>
+        /// The available times db set
+        /// </summary>
+        public DbSet<AvailableTime> AvailableTimes { get; set; }
+
+        /// <summary>
         /// Handling when creating the models
         /// </summary>
         protected override void OnModelCreating(ModelBuilder builder)
