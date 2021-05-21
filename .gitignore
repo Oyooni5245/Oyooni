@@ -35,7 +35,8 @@ bld/
 [Ll]ogs/
 
 # Visual Studio 2015/2017 cache/options directory
-.vs/
+Oyooni/.vs/
+
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -63,6 +64,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+pip-selfcheck.json
 
 # StyleCop
 StyleCopReport.xml
@@ -446,6 +448,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*.cfg
+
+# Environment scripts
+Oyooni/Digit Recognition/Scripts
+Oyooni/Digit Recognition/Scripts
 
 # Spyder project settings
 .spyderproject
