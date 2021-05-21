@@ -382,6 +382,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+[Ss]cripts/
 MANIFEST
 
 # PyInstaller
