@@ -24,6 +24,7 @@ namespace Oyooni.Server.Constants
             public const string PasswordMustHaveLowercase = "Password must have lower case character(s)";
             public const string MinLengthPassword = "Password must be at least 6 characters long";
             public const string PasswordRequired = "Password is required";
+            public const string PasswordsAreSame = "Password are already the same";
         }
 
         /// <summary>
@@ -32,6 +33,9 @@ namespace Oyooni.Server.Constants
         public static class General
         {
             public const string InvalidDayOfWeekId = "Invalid day of week identifier";
+            public const string InvalidImageExtension = "That is not an image file";
+            public const string ImageRequired = "Image is required";
+            public const string LargeImageSize = "Image is too large";
         }
 
         /// <summary>
@@ -40,6 +44,10 @@ namespace Oyooni.Server.Constants
         public static class AvailableTimes
         {
             public const string InvalidFrom = "'From' value can't be greater than or equal to the 'To' value";
+        }
+
+        public static class AI
+        {
         }
     }
 }

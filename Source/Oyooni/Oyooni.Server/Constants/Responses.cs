@@ -29,6 +29,7 @@ namespace Oyooni.Server.Constants
             public const string AlreadyExist = "Email/Username is taken";
             public const string ProfileUpdateSuccess = "Profile has been updated successully";
             public const string ProfileRetrieved = "Profile has been retrieved successully";
+            public const string IncorrectPassword = "Incorrect password";
 
         }
 
@@ -40,6 +41,12 @@ namespace Oyooni.Server.Constants
             public const string TimeDeleted = "The available time has been deleted successully";
             public const string AvailableTimesRetrieved = "Available times have been retrieved successfully";
             public const string TimeAdded = "Available time has been added successfully";
+        }
+
+        public static class AI
+        {
+            public const string DigitRecognitionSuccess = "Digit has been recognized";
+            public const string ColorRecognitionSuccess = "Colors have been recognized";
         }
     }
 }

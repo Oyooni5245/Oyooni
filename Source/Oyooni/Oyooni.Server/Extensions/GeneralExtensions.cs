@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Oyooni.Server.Constants;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Oyooni.Server.Extensions
@@ -52,5 +54,8 @@ namespace Oyooni.Server.Extensions
         /// </summary>
         public static bool IsNullOrEmptyOrWhiteSpaceSafe(this string value)
             => value is null || value == string.Empty || value.All(c => c == ' ');
+
+        public static bool IsImageFileName(this string path)
+            => SupportedFileExtensions.Images.Contains(Path.GetExtension(path));
     }
 }

@@ -93,5 +93,18 @@ namespace Oyooni.Server.Controllers
             // Return the resulting data
             return ApiOk(data: result.ToAppUserDto(), message: Responses.Accounts.ProfileUpdateSuccess);
         }
+
+        [HttpPut]
+        [Route(ApiRoutes.Accounts.ChangePassword)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request, CancellationToken token = default)
+        {
+            // Send an Edit profile command
+            await _mediator.Send(request.ToMediatorRequest(), token);
+
+            // Return the resulting data
+            return ApiOk(message: Responses.Accounts.ProfileUpdateSuccess);
+        }
     }
 }

@@ -6,10 +6,20 @@ using System.Linq;
 
 namespace Oyooni.Server.Extensions
 {
+    /// <summary>
+    /// Extensions for business models mappings
+    /// </summary>
     public static class BusinessModelsMappings
     {
+        /// <summary>
+        /// Maps a <see cref="AppUser"/> to a <see cref="AppUserDto"/>
+        /// </summary>
         public static AppUserDto ToAppUserDto(this AppUser appUser) => new AppUserDto(appUser.FirstName, appUser.LastName);
 
+        /// <summary>
+        /// Maps an IEnumerable of <see cref="AvailableTime"/> to a Dictionary by grouping all times 
+        /// by the day of week idenifier
+        /// </summary>
         public static IDictionary<int, List<AvailableTimeDto>> ToGroupedAvailableTimeDto(this IEnumerable<AvailableTime> times)
         {
             return times.Select(t => new AvailableTimeDto

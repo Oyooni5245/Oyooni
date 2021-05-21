@@ -10,7 +10,7 @@ namespace Oyooni.Server.Controllers
     /// Represents the base api controller class
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/api")]
     public abstract class BaseApiController : ControllerBase
     {
         protected readonly IMediator _mediator;

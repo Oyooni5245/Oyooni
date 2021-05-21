@@ -19,11 +19,12 @@ namespace Oyooni.Server.Installers
         {
             // Get all classes that have the Injected attribute
             var injectedTypes = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => t.GetCustomAttributes(typeof(InjectedAttribute)).Any()).Select(t => new
-                {
-                    Type = t,
-                    InjectedAttribute = t.GetCustomAttribute<InjectedAttribute>()
-                });
+                .Where(t => t.GetCustomAttributes(typeof(InjectedAttribute)).Any(a => !(a as InjectedAttribute).IgnoreForNow))
+                    .Select(t => new
+                    {
+                        Type = t,
+                        InjectedAttribute = t.GetCustomAttribute<InjectedAttribute>()
+                    });
 
             // Loop over all class
             foreach (var injectedType in injectedTypes)
