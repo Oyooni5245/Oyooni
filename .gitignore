@@ -451,8 +451,7 @@ venv.bak/
 *.cfg
 
 # Environment scripts
-Oyooni/Digit Recognition/Scripts
-Oyooni/Digit Recognition/Scripts
+Scripts/
 
 # Spyder project settings
 .spyderproject
