@@ -48,5 +48,31 @@ namespace Oyooni.Server.Controllers
             // Return the recognition result
             return ApiOk(data: new ColorRecognitionResultDto(result), message: Responses.AI.ColorRecognitionSuccess);
         }
+
+        [HttpPost]
+        [Route(ApiRoutes.AI.CaptionImage)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ImageCaptioningResultDto>))]
+        public async Task<IActionResult> CaptionImage([FromForm] CaptionImageRequest request, CancellationToken token = default)
+        {
+            // Send a command to caption the image
+            var result = await _mediator.Send(request.ToMediatorRequest(), token);
+
+            // Return the result
+            return ApiOk(data: new ImageCaptioningResultDto(result), message: Responses.AI.ImageCaptionedSuccess);
+        }
+
+        [HttpPost]
+        [Route(ApiRoutes.AI.EnglishVQA)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<VQAResultDto>))]
+        public async Task<IActionResult> VisuallyAnswer([FromForm] VQARequest request, CancellationToken token = default)
+        {
+            // Send a command to visually answer a question
+            var result = await _mediator.Send(request.ToMediatorRequest(), token);
+
+            // Return the result
+            return ApiOk(data: new VQAResultDto(result), message: Responses.AI.ColorRecognitionSuccess);
+        }
     }
 }

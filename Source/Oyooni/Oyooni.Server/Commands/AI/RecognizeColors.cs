@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using Oyooni.Server.Services.AI.ColorRecognition;
 using System.Collections.Generic;
+using Oyooni.Server.Services.General;
 
 namespace Oyooni.Server.Commands.AI
 {
@@ -48,11 +49,18 @@ namespace Oyooni.Server.Commands.AI
             protected readonly IColorRecognizer _colorRecognizer;
 
             /// <summary>
+            /// The image service
+            /// </summary>
+            protected readonly IImageService _imageService;
+
+            /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(IColorRecognizer colorRecognizer)
+            public Handler(IColorRecognizer colorRecognizer,
+                IImageService imageService)
             {
                 _colorRecognizer = colorRecognizer;
+                _imageService = imageService;
             }
 
             /// <summary>
@@ -60,23 +68,13 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<Dictionary<string, float>> Handle(Request request, CancellationToken token = default)
             {
-                // Container for image data in base64 format
-                var imageData = string.Empty;
+                // Get the image data in base64 format
+                var imageData = await _imageService.GetBase64ImageDataAsync(request.ImageFile, token);
 
-                // Create a memory stream to host the data
-                using (var memoryStream = new MemoryStream())
-                {
-                    // Copy the image data to the memory stream
-                    await request.ImageFile.CopyToAsync(memoryStream, token);
+                // Recognize colors from image data
+                var result = await _colorRecognizer.RecognizeColorsInImageDataAsync(imageData, request.NumberOfColorsToDetect, token);
 
-                    // Save the image data to a temp file
-                    imageData = Convert.ToBase64String(memoryStream.ToArray());
-                }
-
-                // Recognize result from image data
-                var result1 = await _colorRecognizer.RecognizeColorsInImageDataAsync(imageData, request.NumberOfColorsToDetect, token);
-
-                return result1;
+                return result;
 
                 #region By Image
 

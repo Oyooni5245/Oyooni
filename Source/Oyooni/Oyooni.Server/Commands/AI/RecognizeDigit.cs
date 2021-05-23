@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Oyooni.Server.Services.AI.DigitRecognition;
+using Oyooni.Server.Services.General;
 using System;
 using System.IO;
 using System.Threading;
@@ -40,11 +41,18 @@ namespace Oyooni.Server.Commands.AI
             protected readonly IDigitRecognizer _digitRecognizer;
 
             /// <summary>
+            /// The image service
+            /// </summary>
+            protected readonly IImageService _imageService;
+
+            /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(IDigitRecognizer digitRecognizer)
+            public Handler(IDigitRecognizer digitRecognizer,
+                IImageService imageService)
             {
                 _digitRecognizer = digitRecognizer;
+                _imageService = imageService;
             }
 
             /// <summary>
@@ -52,23 +60,13 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<int> Handle(Request request, CancellationToken token = default)
             {
-                // Container for image data in base64 format
-                var imageData = string.Empty;
+                // Get the image data in base64 format
+                var imageData = await _imageService.GetBase64ImageDataAsync(request.ImageFile, token);
 
-                // Create a memory stream to host the data
-                using (var memoryStream = new MemoryStream())
-                {
-                    // Copy the image data to the memory stream
-                    await request.ImageFile.CopyToAsync(memoryStream, token);
+                // Recognize digit from image data
+                var result = await _digitRecognizer.RecognizeDigitFromImageData(imageData, token);
 
-                    // Save the image data to a temp file
-                    imageData = Convert.ToBase64String(memoryStream.ToArray());
-                }
-
-                // Recognize result from image data
-                var result1 = await _digitRecognizer.RecognizeDigitFromImageData(imageData, token);
-
-                return result1;
+                return result;
 
                 #region By Image
 

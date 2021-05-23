@@ -27,7 +27,7 @@
         {
             public const string RecognizeDigit = "/api/ai/recognize-digit";
             public const string RecognizeColor = "/api/ai/recognize-color";
-            public const string ArabicCaptionImage = "/api/ai/caption-image";
+            public const string CaptionImage = "/api/ai/caption-image";
             public const string EnglishVQA = "/api/ai/visually-answer";
         }
     }

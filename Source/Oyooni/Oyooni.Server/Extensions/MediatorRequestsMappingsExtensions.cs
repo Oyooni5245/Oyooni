@@ -1,6 +1,7 @@
 ﻿using Oyooni.Server.Commands.Accounts;
 using Oyooni.Server.Commands.AI;
 using Oyooni.Server.Commands.AvailableTimes;
+using Oyooni.Server.Constants;
 using Oyooni.Server.Requests.Accounts;
 using Oyooni.Server.Requests.AI;
 using Oyooni.Server.Requests.AvailableTimes;
@@ -60,5 +61,17 @@ namespace Oyooni.Server.Extensions
         /// </summary>
         public static ChangePassword.Request ToMediatorRequest(this ChangePasswordRequest request)
             => new ChangePassword.Request(request.OldPassword, request.NewPassword);
+
+        /// <summary>
+        /// Maps <see cref="CaptionImageRequest"/> to <see cref="CaptionImage.Request"/>
+        /// </summary>
+        public static CaptionImage.Request ToMediatorRequest(this CaptionImageRequest request)
+            => new CaptionImage.Request((CaptioningLanguage)request.LanguageId, request.File);
+
+        /// <summary>
+        /// Maps <see cref="VQARequest"/> to <see cref="AnswerVisually.Request"/>
+        /// </summary>
+        public static AnswerVisually.Request ToMediatorRequest(this VQARequest request)
+            => new AnswerVisually.Request(request.Question, request.File);
     }
 }

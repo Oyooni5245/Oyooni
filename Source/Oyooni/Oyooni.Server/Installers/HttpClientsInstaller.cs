@@ -32,6 +32,12 @@ namespace Oyooni.Server.Installers
             }).AddTransientHttpErrorPolicy(builder => builder
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 
+            services.AddHttpClient(HttpClients.EnglishImageCaptioningClient, client =>
+            {
+                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:EnglishImageCaptioningEndpoint"]);
+            }).AddTransientHttpErrorPolicy(builder => builder
+                    .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
+
             // Add English VQA client
             services.AddHttpClient(HttpClients.EnglishVAQClient, client =>
             {

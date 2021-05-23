@@ -46,8 +46,14 @@ namespace Oyooni.Server.Constants
             public const string InvalidFrom = "'From' value can't be greater than or equal to the 'To' value";
         }
 
+        /// <summary>
+        /// AI-Specific validation responses
+        /// </summary>
         public static class AI
         {
+            public const string InvalidLanguageId = "Invalid language identifier";
+            public const string QuestionRequired = "The question is required";
+            public const string QuestionTooLong = "The question is too long";
         }
     }
 }

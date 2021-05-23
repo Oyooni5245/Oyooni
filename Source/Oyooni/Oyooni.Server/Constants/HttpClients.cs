@@ -5,6 +5,7 @@
         public const string DigitRecognizerClient = nameof(DigitRecognizerClient);
         public const string ColorRecognizerClient = nameof(ColorRecognizerClient);
         public const string ArabicImageCaptioningClient = nameof(ArabicImageCaptioningClient);
+        public const string EnglishImageCaptioningClient = nameof(EnglishImageCaptioningClient);
         public const string EnglishVAQClient = nameof(EnglishVAQClient);
     }
 }
