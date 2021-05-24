@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Oyooni.Server.Data.BusinessModels;
 
 namespace Oyooni.Server.Data.Mappings.Builders
@@ -22,6 +23,9 @@ namespace Oyooni.Server.Data.Mappings.Builders
 
             // Make LastName required and with a specific length
             builder.Property(a => a.LastName).HasMaxLength(64);
+
+            // Make the concurrency stamp type as nvarchar (Needed for sqlite)
+            builder.Property(a => a.ConcurrencyStamp).HasColumnType("varchar(256)");
 
             // Ignore mapping the FullName property
             builder.Ignore(a => a.FullName);
