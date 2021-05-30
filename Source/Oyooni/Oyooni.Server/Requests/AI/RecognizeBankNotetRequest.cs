@@ -3,9 +3,9 @@
 namespace Oyooni.Server.Requests.AI
 {
     /// <summary>
-    /// Represents a request to recognize the digit in an image file
+    /// Represents a request to recognize the bank note in an image file
     /// </summary>
-    public class RecognizeDigitRequest
+    public class RecognizeBankNotetRequest
     {
         /// <summary>
         /// The image file to recognize the digit in
@@ -15,11 +15,11 @@ namespace Oyooni.Server.Requests.AI
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RecognizeDigitRequest() { }
+        public RecognizeBankNotetRequest() { }
 
         /// <summary>
-        /// Constructs a new instance of the <see cref="RecognizeDigitRequest"/> class using the passed parameters
+        /// Constructs a new instance of the <see cref="RecognizeBankNotetRequest"/> class using the passed parameters
         /// </summary>
-        public RecognizeDigitRequest(IFormFile file) => File = file;
+        public RecognizeBankNotetRequest(IFormFile file) => File = file;
     }
 }

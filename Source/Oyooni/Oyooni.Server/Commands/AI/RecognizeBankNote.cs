@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Oyooni.Server.Services.AI.DigitRecognition;
+using Oyooni.Server.Enumerations;
+using Oyooni.Server.Services.AI.BankNoteRecognition;
 using Oyooni.Server.Services.General;
 using System;
 using System.IO;
@@ -10,17 +11,17 @@ using System.Threading.Tasks;
 namespace Oyooni.Server.Commands.AI
 {
     /// <summary>
-    /// Represents the recognize digit command containing the request and the handler types
+    /// Represents the recognize bank note command containing the request and the handler types
     /// </summary>
-    public class RecognizeDigit
+    public class RecognizeBankNote
     {
         /// <summary>
-        /// Represents the request for the <see cref="RecognizeDigit"/> command
+        /// Represents the request for the <see cref="RecognizeBankNote"/> command
         /// </summary>
-        public class Request : IRequest<int>
+        public class Request : IRequest<SyrianBankNoteTypes>
         {
             /// <summary>
-            /// The image file containing the digit to be recognized
+            /// The image file containing the bank note to be recognized
             /// </summary>
             public IFormFile ImageFile { get; }
 
@@ -33,12 +34,12 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the handler for the <see cref="Request"/>
         /// </summary>
-        public class Handler : IRequestHandler<Request, int>
+        public class Handler : IRequestHandler<Request, SyrianBankNoteTypes>
         {
             /// <summary>
             /// The digit recognizer service
             /// </summary>
-            protected readonly IDigitRecognizer _digitRecognizer;
+            protected readonly ISyrianBankNoteRecognitionService _bankNoteRecognitionService;
 
             /// <summary>
             /// The image service
@@ -48,23 +49,23 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(IDigitRecognizer digitRecognizer,
+            public Handler(ISyrianBankNoteRecognitionService digitRecognizer,
                 IImageService imageService)
             {
-                _digitRecognizer = digitRecognizer;
+                _bankNoteRecognitionService = digitRecognizer;
                 _imageService = imageService;
             }
 
             /// <summary>
             /// Handles when a <see cref="Request"/> is sent
             /// </summary>
-            public async Task<int> Handle(Request request, CancellationToken token = default)
+            public async Task<SyrianBankNoteTypes> Handle(Request request, CancellationToken token = default)
             {
                 // Get the image data in base64 format
                 var imageData = await _imageService.GetBase64ImageDataAsync(request.ImageFile, token);
 
                 // Recognize digit from image data
-                var result = await _digitRecognizer.RecognizeDigitFromImageData(imageData, token);
+                var result = await _bankNoteRecognitionService.RecognizeBankNoteAsync(imageData, token);
 
                 return result;
 

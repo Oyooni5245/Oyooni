@@ -6,7 +6,6 @@ using Oyooni.Server.Constants;
 using Oyooni.Server.Dtos.AI;
 using Oyooni.Server.Extensions;
 using Oyooni.Server.Requests.AI;
-using System.Drawing;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,22 +23,22 @@ namespace Oyooni.Server.Controllers
         public AIController(IMediator mediator, IStringLocalizer<Program> localizer) : base(mediator, localizer) { }
 
         [HttpPost]
-        [Route(ApiRoutes.AI.RecognizeDigit)]
+        [Route(ApiRoutes.AI.RecognizeBankNote)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<DigitRecognitionResultDto>))]
-        public async Task<IActionResult> RecognizeDigit([FromForm]RecognizeDigitRequest request, CancellationToken token = default)
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteRecognitionResultDto>))]
+        public async Task<IActionResult> RecognizeBankNote([FromForm]RecognizeBankNotetRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized digit
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
             
             // Return the recognition result
-            return ApiOk(data: new DigitRecognitionResultDto(result), message: Responses.AI.DigitRecognitionSuccess);
+            return ApiOk(data: new BankNoteRecognitionResultDto(result), message: Responses.AI.BankNoteRecognitionSuccess);
         }
 
         [HttpPost]
         [Route(ApiRoutes.AI.RecognizeColor)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<DigitRecognitionResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteRecognitionResultDto>))]
         public async Task<IActionResult> RecognizeColor([FromForm] RecognizeColorRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized Colors
@@ -63,16 +62,16 @@ namespace Oyooni.Server.Controllers
         }
 
         [HttpPost]
-        [Route(ApiRoutes.AI.EnglishVQA)]
+        [Route(ApiRoutes.AI.RecognizeText)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<VQAResultDto>))]
-        public async Task<IActionResult> VisuallyAnswer([FromForm] VQARequest request, CancellationToken token = default)
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<TextRecognitionResultDto>))]
+        public async Task<IActionResult> RecognizeText([FromForm] RecognizeTextRequest request, CancellationToken token = default)
         {
-            // Send a command to visually answer a question
+            // Send a command to caption the image
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
 
             // Return the result
-            return ApiOk(data: new VQAResultDto(result), message: Responses.AI.ColorRecognitionSuccess);
+            return ApiOk(data: new TextRecognitionResultDto(result), message: Responses.AI.ImageCaptionedSuccess);
         }
     }
 }

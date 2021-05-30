@@ -45,7 +45,7 @@ namespace Oyooni.Server.Constants
 
         public static class AI
         {
-            public const string DigitRecognitionSuccess = "Digit has been recognized";
+            public const string BankNoteRecognitionSuccess = "Bank note has been recognized";
             public const string ColorRecognitionSuccess = "Colors have been recognized";
             public const string ImageCaptionedSuccess = "Image has been captioned successfully";
         }

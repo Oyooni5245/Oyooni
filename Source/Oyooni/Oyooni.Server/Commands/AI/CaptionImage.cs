@@ -22,11 +22,6 @@ namespace Oyooni.Server.Commands.AI
         public class Request : IRequest<string>
         {
             /// <summary>
-            /// The language the caption should be in
-            /// </summary>
-            public CaptioningLanguage Language { get; }
-
-            /// <summary>
             /// The file of the image to be captioned
             /// </summary>
             public IFormFile ImageFile { get; }
@@ -34,7 +29,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Constructs a new instance of the <see cref="Request"/> class using the passed parameters
             /// </summary>
-            public Request(CaptioningLanguage language, IFormFile imageFile) => (Language, ImageFile) = (language, imageFile);
+            public Request(IFormFile imageFile) => ImageFile = imageFile;
         }
 
         /// <summary>
@@ -67,7 +62,7 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<string> Handle(Request request, CancellationToken token)
             {
-                return await _imageCaptioningService.CaptionImageAsync(request.Language,
+                return await _imageCaptioningService.CaptionImageAsync(
                     await _imageService.GetBase64ImageDataAsync(request.ImageFile, token), token);
             }
         }

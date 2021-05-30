@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Oyooni.Server.Services.AI.VAQ;
+using Oyooni.Server.Services.AI.TextRecogntion;
 using Oyooni.Server.Services.General;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,29 +8,24 @@ using System.Threading.Tasks;
 namespace Oyooni.Server.Commands.AI
 {
     /// <summary>
-    /// Represents a command for visually answering a question on an image, contains the request and the handler types
+    /// Represents a command for recogniting text in an image, contains the request and the handler types
     /// </summary>
-    public class AnswerVisually
+    public class RecognizeText
     {
         /// <summary>
-        /// Represents the request for the <see cref="AnswerVisually"/> command
+        /// Represents the request for the <see cref="RecognizeText"/> command
         /// </summary>
         public class Request : IRequest<string>
         {
             /// <summary>
-            /// The question to be answered
-            /// </summary>
-            public string Question { get; }
-
-            /// <summary>
-            /// The file of the image to be used for answering the question
+            /// The file of the image to be used for recognizing the text
             /// </summary>
             public IFormFile ImageFile { get; }
 
             /// <summary>
             /// Constructs a new instance of the <see cref="Request"/> class using the passed parameters
             /// </summary>
-            public Request(string question, IFormFile imageFile) => (Question, ImageFile) = (question, imageFile);
+            public Request(IFormFile imageFile) => ImageFile = imageFile;
         }
 
         /// <summary>
@@ -41,7 +36,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// The visual question answering service
             /// </summary>
-            protected readonly IVisualQuestionAnsweringService _vaqService;
+            protected readonly ITextRecognitionService _textRecognitionService;
 
             /// <summary>
             /// The image service
@@ -51,10 +46,10 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(IVisualQuestionAnsweringService vaqService,
+            public Handler(ITextRecognitionService textRecognitionService,
                 IImageService imageService)
             {
-                _vaqService = vaqService;
+                _textRecognitionService = textRecognitionService;
                 _imageService = imageService;
             }
 
@@ -63,7 +58,7 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<string> Handle(Request request, CancellationToken token)
             {
-                return await _vaqService.AnswerAsync(request.Question,
+                return await _textRecognitionService.RecognizeTextAsync(
                     await _imageService.GetBase64ImageDataAsync(request.ImageFile, token), token);
             }
         }

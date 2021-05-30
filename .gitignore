@@ -469,3 +469,9 @@ Scripts/
 
 # AI models extensions
 *.h5
+
+# Admission Folders
+First Admission Presentation
+
+# Datasets folder
+Datasets

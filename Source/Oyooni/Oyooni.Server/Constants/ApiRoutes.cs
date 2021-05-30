@@ -25,10 +25,10 @@
 
         public static class AI
         {
-            public const string RecognizeDigit = "/api/ai/recognize-digit";
+            public const string RecognizeBankNote = "/api/ai/recognize-banknote";
             public const string RecognizeColor = "/api/ai/recognize-color";
             public const string CaptionImage = "/api/ai/caption-image";
-            public const string EnglishVQA = "/api/ai/visually-answer";
+            public const string RecognizeText = "/api/ai/recognize-text";
         }
     }
 }

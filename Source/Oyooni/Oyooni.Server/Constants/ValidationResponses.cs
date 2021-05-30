@@ -51,9 +51,6 @@ namespace Oyooni.Server.Constants
         /// </summary>
         public static class AI
         {
-            public const string InvalidLanguageId = "Invalid language identifier";
-            public const string QuestionRequired = "The question is required";
-            public const string QuestionTooLong = "The question is too long";
         }
     }
 }

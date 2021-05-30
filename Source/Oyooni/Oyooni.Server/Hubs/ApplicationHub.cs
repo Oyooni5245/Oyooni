@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
@@ -7,13 +8,17 @@ namespace Oyooni.Server.Hubs
     /// <summary>
     /// Represents the application's main hub
     /// </summary>
-    public class ApplicationHub : Hub
+    [Authorize]
+    public class ApplicationHub : Hub<IServerMethods>
     {
         /// <summary>
         /// Handles when a client connects to the hub
         /// </summary>
         public override async Task OnConnectedAsync()
         {
+            // Send to the client that he connected successfully
+            await Clients.Caller.ConnectedSuccessfully(Context.ConnectionId);
+
             await base.OnConnectedAsync();
         }
 
@@ -25,5 +30,10 @@ namespace Oyooni.Server.Hubs
         {
             await base.OnDisconnectedAsync(exception);
         }
+    }
+
+    public interface IServerMethods
+    {
+        Task ConnectedSuccessfully(string connectionId);
     }
 }

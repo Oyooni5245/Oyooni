@@ -6,14 +6,14 @@ using Oyooni.Server.Requests.AI;
 namespace Oyooni.Server.Validators.AI
 {
     /// <summary>
-    /// Represents a validator for the <see cref="RecognizeDigitRequest"/> type
+    /// Represents a validator for the <see cref="RecognizeBankNotetRequest"/> type
     /// </summary>
-    public class RecognizeDigitRequestValidator : AbstractValidator<RecognizeDigitRequest>
+    public class RecognizeBankNoteRequestValidator : AbstractValidator<RecognizeBankNotetRequest>
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RecognizeDigitRequestValidator()
+        public RecognizeBankNoteRequestValidator()
         {
             RuleFor(req => req.File)
                 .Cascade(CascadeMode.Stop)

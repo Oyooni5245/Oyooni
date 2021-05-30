@@ -45,10 +45,10 @@ namespace Oyooni.Server.Extensions
             => new AddAvailableTime.Request((DayOfWeek)request.DayOfWeekId, request.From, request.To);
 
         /// <summary>
-        /// Maps <see cref="RecognizeDigitRequest"/> to <see cref="RecognizeDigit.Request"/>
+        /// Maps <see cref="RecognizeBankNotetRequest"/> to <see cref="RecognizeBankNote.Request"/>
         /// </summary>
-        public static RecognizeDigit.Request ToMediatorRequest(this RecognizeDigitRequest request)
-            => new RecognizeDigit.Request(request.File);
+        public static RecognizeBankNote.Request ToMediatorRequest(this RecognizeBankNotetRequest request)
+            => new RecognizeBankNote.Request(request.File);
 
         /// <summary>
         /// Maps <see cref="RecognizeColorRequest"/> to <see cref="RecognizeColors.Request"/>
@@ -66,12 +66,12 @@ namespace Oyooni.Server.Extensions
         /// Maps <see cref="CaptionImageRequest"/> to <see cref="CaptionImage.Request"/>
         /// </summary>
         public static CaptionImage.Request ToMediatorRequest(this CaptionImageRequest request)
-            => new CaptionImage.Request((CaptioningLanguage)request.LanguageId, request.File);
+            => new CaptionImage.Request(request.File);
 
         /// <summary>
-        /// Maps <see cref="VQARequest"/> to <see cref="AnswerVisually.Request"/>
+        /// Maps <see cref="RecognizeTextRequest"/> to <see cref="RecognizeText.Request"/>
         /// </summary>
-        public static AnswerVisually.Request ToMediatorRequest(this VQARequest request)
-            => new AnswerVisually.Request(request.Question, request.File);
+        public static RecognizeText.Request ToMediatorRequest(this RecognizeTextRequest request)
+            => new RecognizeText.Request(request.File);
     }
 }

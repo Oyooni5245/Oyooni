@@ -2,10 +2,9 @@
 {
     public static class HttpClients
     {
-        public const string DigitRecognizerClient = nameof(DigitRecognizerClient);
+        public const string BankNoteRecognizerClient = nameof(BankNoteRecognizerClient);
         public const string ColorRecognizerClient = nameof(ColorRecognizerClient);
-        public const string ArabicImageCaptioningClient = nameof(ArabicImageCaptioningClient);
-        public const string EnglishImageCaptioningClient = nameof(EnglishImageCaptioningClient);
-        public const string EnglishVAQClient = nameof(EnglishVAQClient);
+        public const string ImageCaptioningClient = nameof(ImageCaptioningClient);
+        public const string TextRecognitionClient = nameof(TextRecognitionClient);
     }
 }

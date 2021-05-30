@@ -46,7 +46,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// The color recognizer service
             /// </summary>
-            protected readonly IColorRecognizer _colorRecognizer;
+            protected readonly IColorRecognitionService _colorRecognizer;
 
             /// <summary>
             /// The image service
@@ -56,7 +56,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(IColorRecognizer colorRecognizer,
+            public Handler(IColorRecognitionService colorRecognizer,
                 IImageService imageService)
             {
                 _colorRecognizer = colorRecognizer;

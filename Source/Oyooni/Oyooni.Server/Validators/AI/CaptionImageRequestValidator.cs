@@ -2,7 +2,6 @@
 using Oyooni.Server.Constants;
 using Oyooni.Server.Extensions;
 using Oyooni.Server.Requests.AI;
-using System;
 
 namespace Oyooni.Server.Validators.AI
 {
@@ -16,10 +15,6 @@ namespace Oyooni.Server.Validators.AI
         /// </summary>
         public CaptionImageRequestValidator()
         {
-            // Make the value of LangaugeId one of the values of the CaptioningLangauge enum values
-            RuleFor(req => req.LanguageId)
-                .Must(v => Enum.IsDefined(typeof(CaptioningLanguage), v)).WithMessage(ValidationResponses.AI.InvalidLanguageId);
-
             // Image file validation
             RuleFor(req => req.File)
                 .Cascade(CascadeMode.Stop)

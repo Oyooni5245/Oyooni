@@ -14,8 +14,8 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
     /// <summary>
     /// Represents a color recognizer service
     /// </summary>
-    [Injected(ServiceLifetime.Scoped, typeof(IColorRecognizer))]
-    public class ColorRecognizer : IColorRecognizer
+    [Injected(ServiceLifetime.Scoped, typeof(IColorRecognitionService))]
+    public class ColorRecognitionService : IColorRecognitionService
     {
         /// <summary>
         /// The http client used to call the local server serving the color detection
@@ -23,9 +23,9 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         protected readonly HttpClient _client;
 
         /// <summary>
-        /// Constructrs a new instance of the <see cref="ColorRecognizer"/> class using the passed parameters
+        /// Constructrs a new instance of the <see cref="ColorRecognitionService"/> class using the passed parameters
         /// </summary>
-        public ColorRecognizer(IHttpClientFactory factory)
+        public ColorRecognitionService(IHttpClientFactory factory)
         {
             _client = factory.CreateClient(HttpClients.ColorRecognizerClient);
         }

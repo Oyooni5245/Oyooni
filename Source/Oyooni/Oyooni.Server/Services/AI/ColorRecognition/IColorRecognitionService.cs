@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 namespace Oyooni.Server.Services.AI.ColorRecognition
 {
     /// <summary>
-    /// Represents a color recognizer contract
+    /// Represents a color recognizer service contract
     /// </summary>
-    public interface IColorRecognizer
+    public interface IColorRecognitionService
     {
         /// <summary>
         /// Recognizes colors in an image using the base64 representation of the image

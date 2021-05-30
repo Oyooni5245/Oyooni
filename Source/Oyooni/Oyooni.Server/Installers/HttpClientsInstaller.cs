@@ -12,9 +12,9 @@ namespace Oyooni.Server.Installers
         public IServiceCollection InstallDependencies(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             // Add Digit Recognition client
-            services.AddHttpClient(HttpClients.DigitRecognizerClient, client =>
+            services.AddHttpClient(HttpClients.BankNoteRecognizerClient, client =>
             {
-                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:DigitRecognitionEndpoint"]);
+                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:BankNoteRecognitionEndpoint"]);
             }).AddTransientHttpErrorPolicy(builder => builder
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 
@@ -26,22 +26,15 @@ namespace Oyooni.Server.Installers
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 
             // Add Arabic image captioning client
-            services.AddHttpClient(HttpClients.ArabicImageCaptioningClient, client =>
+            services.AddHttpClient(HttpClients.ImageCaptioningClient, client =>
             {
-                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:ArabicImageCaptioningEndpoint"]);
+                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:ImageCaptioningEndpoint"]);
             }).AddTransientHttpErrorPolicy(builder => builder
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 
-            services.AddHttpClient(HttpClients.EnglishImageCaptioningClient, client =>
+            services.AddHttpClient(HttpClients.TextRecognitionClient, client =>
             {
-                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:EnglishImageCaptioningEndpoint"]);
-            }).AddTransientHttpErrorPolicy(builder => builder
-                    .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
-
-            // Add English VQA client
-            services.AddHttpClient(HttpClients.EnglishVAQClient, client =>
-            {
-                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:EnglishVAQEndpoint"]);
+                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:TextRecognitionEndpoint"]);
             }).AddTransientHttpErrorPolicy(builder => builder
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 

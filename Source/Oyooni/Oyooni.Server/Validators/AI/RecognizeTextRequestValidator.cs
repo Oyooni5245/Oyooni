@@ -6,20 +6,15 @@ using Oyooni.Server.Requests.AI;
 namespace Oyooni.Server.Validators.AI
 {
     /// <summary>
-    /// Represents a validator for the <see cref="VQARequest"/> type
+    /// Represents a validator for the <see cref="RecognizeTextRequest"/> type
     /// </summary>
-    public class VQARequestValidator : AbstractValidator<VQARequest>
+    public class RecognizeTextRequestValidator : AbstractValidator<RecognizeTextRequest>
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public VQARequestValidator()
+        public RecognizeTextRequestValidator()
         {
-            // Make the question required and not too long(256 characters max)
-            RuleFor(req => req.Question)
-                .Must(value => !value.IsNullOrEmptyOrWhiteSpaceSafe()).WithMessage(ValidationResponses.AI.QuestionRequired)
-                .MaximumLength(256).WithMessage(ValidationResponses.AI.QuestionTooLong);
-
             // Image file validation
             RuleFor(req => req.File)
                 .Cascade(CascadeMode.Stop)

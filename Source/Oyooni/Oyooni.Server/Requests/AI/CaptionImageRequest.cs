@@ -9,11 +9,6 @@ namespace Oyooni.Server.Requests.AI
     public class CaptionImageRequest
     {
         /// <summary>
-        /// The identifer of the language the caption should be in
-        /// </summary>
-        public int LanguageId { get; set; }
-
-        /// <summary>
         /// The image file to do the captioning for
         /// </summary>
         public IFormFile File { get; set; }
@@ -26,6 +21,6 @@ namespace Oyooni.Server.Requests.AI
         /// <summary>
         /// Constructs a new instance of the <see cref="CaptionImageRequest"/> class using the passed parameters
         /// </summary>
-        public CaptionImageRequest(int languageId, IFormFile file) => (LanguageId, File) = (languageId, file);
+        public CaptionImageRequest(IFormFile file) => File = file;
     }
 }
