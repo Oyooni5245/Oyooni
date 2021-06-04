@@ -46,14 +46,14 @@ namespace Oyooni.Server.Controllers
         [Route(ApiRoutes.Accounts.Signup)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IAuthToken>))]
         public async Task<IActionResult> Signup(SignupRequest request, CancellationToken token = default)
         {
             // Send a signup command
-            await _mediator.Send(request.ToMediatorRequest(), token);
+            var data = await _mediator.Send(request.ToMediatorRequest(), token);
 
-            // Return an ok result
-            return ApiOk(message: Responses.Accounts.SignupSuccess);
+            // Return an ok result along with the token
+            return ApiOk(data: data, message: Responses.Accounts.SignupSuccess);
         }
 
         [HttpPost]

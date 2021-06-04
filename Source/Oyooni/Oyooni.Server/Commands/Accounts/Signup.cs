@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Oyooni.Server.Constants;
 using Oyooni.Server.Data;
 using Oyooni.Server.Data.BusinessModels;
+using Oyooni.Server.Dtos.Accounts;
 using Oyooni.Server.Exceptions;
 using Oyooni.Server.Extensions;
+using Oyooni.Server.Services.Accounts.TokenProviders;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +20,7 @@ namespace Oyooni.Server.Commands.Accounts
         /// <summary>
         /// Represents the request type for the sign up command
         /// </summary>
-        public class Request : IRequest
+        public class Request : IRequest<IAuthToken>
         {
             /// <summary>
             /// The user's first name
@@ -50,7 +52,7 @@ namespace Oyooni.Server.Commands.Accounts
         /// <summary>
         /// Represents the handler for the <see cref="Request"/> class
         /// </summary>
-        public class Handler : IRequestHandler<Request>
+        public class Handler : IRequestHandler<Request, IAuthToken>
         {
             /// <summary>
             /// Manger used to do operations on the <see cref="AppUser"/> class
@@ -63,20 +65,27 @@ namespace Oyooni.Server.Commands.Accounts
             protected readonly IApplicationDbContext _context;
 
             /// <summary>
+            /// The authorization token provider used to provide auth tokens
+            /// </summary>
+            protected readonly IAuthorizationTokenProvider _tokenProvider;
+
+            /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class
             /// </summary>
             public Handler(UserManager<AppUser> userManager,
-                IApplicationDbContext context)
+                IApplicationDbContext context,
+                IAuthorizationTokenProvider tokenProvider)
             {
                 _userManager = userManager;
                 _context = context;
+                _tokenProvider = tokenProvider;
             }
 
             /// <summary>
             /// Handles when a <see cref="Request"/> is sent
             /// </summary>
             /// <param name="request">The request object</param>
-            public async Task<Unit> Handle(Request request, CancellationToken token)
+            public async Task<IAuthToken> Handle(Request request, CancellationToken token)
             {
                 // Get the user by email
                 var userByEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -97,8 +106,8 @@ namespace Oyooni.Server.Commands.Accounts
                 // Add the new user
                 await _userManager.CreateAsync(newUser, request.Password);
 
-                // Return nothing
-                return Unit.Value;
+                // Return new IAuthToken
+                return await _tokenProvider.GenerateAuthTokenForUserAsync(newUser, token);
             }
         }
     }
