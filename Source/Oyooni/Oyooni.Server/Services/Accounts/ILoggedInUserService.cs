@@ -64,7 +64,7 @@ namespace Oyooni.Server.Services.Accounts
 
             // Get the user identifier if it is there
             UserId = httpContext.User
-                ?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                ?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             // Get the claims principal if it is there
             ClaimsPrincipal = httpContext.User;

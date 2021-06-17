@@ -49,5 +49,17 @@ namespace Oyooni.Server.Constants
             public const string ColorRecognitionSuccess = "Colors have been recognized";
             public const string ImageCaptionedSuccess = "Image has been captioned successfully";
         }
+
+        public static class Hub
+        {
+            public const string NotAVisualImpaired = "You can't request help from a volunteer";
+            public const string AlreadyInACall = "You are already in a call";
+            public const string AlreadyGotAcceptedForACall = "Visually impaired already got accepted for a call by another volunteer";
+            public const string AlreadyRequestedForHelp = "You already requested for help";
+            public const string VolunteerDisconnected = "Volunteer has disconnected";
+            public const string VisuallyImpairedDisconnected = "The visually impaired person has disconnected";
+            public const string CantAcceptCall = "Can't accept the call";
+            public const string VICancelledHelpRequest = "The visually impaired person has cancelled the help request";
+        }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Oyooni.Server.Extensions;
 using Oyooni.Server.Hubs;
 using Oyooni.Server.Middlewares;
+using System;
 
 namespace Oyooni.Server
 {
@@ -77,7 +78,10 @@ namespace Oyooni.Server
                 endpoints.MapControllers();
 
                 // Map the SignalR hub
-                endpoints.MapHub<ApplicationHub>("/hub");
+                endpoints.MapHub<ApplicationHub>("/hub", (options) =>
+                {
+                    options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3600);
+                });
             });
         }
     }
