@@ -53,7 +53,7 @@ namespace Oyooni.Server.Services.Cache
         }
 
         public Task<string[]> GetElectedVolunteersForConnectionAsync(string vIConnectionId, CancellationToken token = default)
-            => Task.FromResult(_helpRequestsMappings.GetValueOrDefault(vIConnectionId).ToArray());
+            => Task.FromResult(_helpRequestsMappings.GetValueOrDefault(vIConnectionId)?.ToArray());
 
         public Task<string[]> GetMostLikelyToAnswerAndSetAsync(string vIConnectionId, CancellationToken token = default)
         {

@@ -8,6 +8,7 @@ using Oyooni.Server.Extensions;
 using Oyooni.Server.Services.Accounts;
 using Oyooni.Server.Services.Cache;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Oyooni.Server.Hubs
@@ -257,11 +258,14 @@ namespace Oyooni.Server.Hubs
 
             // Notify them that the visually impaired person has cancelled the help request
             // Pass the connectionId of the VI so that they delete it from the UI
-            await Clients.Clients(electedVolunteers).CancelledHelpRequest(currentConnectionId, _stringLocalizer[Responses.Hub.VICancelledHelpRequest].Value);
-            
-            // Remove the help request initiated by the VI
-            await _hubCacheService.RemoveHelpRequestAsync(currentConnectionId);
+            if (electedVolunteers != null && electedVolunteers.Any())
+            {
+                await Clients.Clients(electedVolunteers).CancelledHelpRequest(currentConnectionId, _stringLocalizer[Responses.Hub.VICancelledHelpRequest].Value);
 
+                // Remove the help request initiated by the VI
+                await _hubCacheService.RemoveHelpRequestAsync(currentConnectionId);
+            }
+            
             return true;
         }
 
