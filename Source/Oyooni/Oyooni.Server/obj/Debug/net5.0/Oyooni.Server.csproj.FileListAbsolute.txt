@@ -97,3 +97,12 @@ D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5
 D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
 D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
 D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\Pipelines.Sockets.Unofficial.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\ServiceStack.Common.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\ServiceStack.Interfaces.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\ServiceStack.Redis.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\ServiceStack.Text.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\StackExchange.Redis.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\System.Diagnostics.PerformanceCounter.dll
+D:\Projects\University\Senior Project\Source\Oyooni\Oyooni.Server\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll

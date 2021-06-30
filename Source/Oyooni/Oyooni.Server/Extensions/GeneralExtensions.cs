@@ -1,7 +1,9 @@
 ﻿using Oyooni.Server.Constants;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace Oyooni.Server.Extensions
 {
@@ -55,7 +57,26 @@ namespace Oyooni.Server.Extensions
         public static bool IsNullOrEmptyOrWhiteSpaceSafe(this string value)
             => value is null || value == string.Empty || value.All(c => c == ' ');
 
+        /// <summary>
+        /// Returns where the path is an image filename path
+        /// </summary>
         public static bool IsImageFileName(this string path)
             => SupportedFileExtensions.Images.Contains(Path.GetExtension(path));
+
+        /// <summary>
+        /// Converts the object to json
+        /// </summary>
+        public static string ToJson<T>(this T obj) where T : class
+            => obj is null ? throw new NullReferenceException("Passed object is null") : JsonSerializer.Serialize(obj);
+
+        /// <summary>
+        /// Converts the json content to an insance of the <typeparamref name="T"/> class
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T ToObject<T>(this string json) where T : class, new()
+            => string.IsNullOrEmpty(json) ? throw new ArgumentException("Passed json is empty") : 
+                JsonSerializer.Deserialize<T>(json);
     }
 }

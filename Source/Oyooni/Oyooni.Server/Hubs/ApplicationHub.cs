@@ -67,13 +67,15 @@ namespace Oyooni.Server.Hubs
         {
             var currentConnectionId = Context.ConnectionId;
             var isVolunteer = !_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe();
-
+            
             // If it was a volunteer
             if (isVolunteer)
             {
                 // Check if the volunteer is in an existing call already
                 // if yes then tell the visually impaired person that was getting the help that the volunteer disconnected
-                if (await _hubCacheService.IsInACallAsync(currentConnectionId, out var vIConnectionId))
+                (var volunteerInACall, var vIConnectionId) = await _hubCacheService.IsInACallAsync(currentConnectionId);
+
+                if (volunteerInACall)
                 {
                     await _hubCacheService.RemoveCallAsync(vIConnectionId);
                     await Clients.Client(vIConnectionId).VolunteerDisconnected(currentConnectionId, _stringLocalizer[Responses.Hub.VolunteerDisconnected].Value);
@@ -88,7 +90,9 @@ namespace Oyooni.Server.Hubs
             // It is a visually impaired person
 
             // He might disconnect while he is in a call so notify volunteer to end the call
-            if (await _hubCacheService.IsInACallAsync(currentConnectionId, out var volunteerConnectionId))
+            (var vIInACall, var volunteerConnectionId) = await _hubCacheService.IsInACallAsync(currentConnectionId);
+
+            if (vIInACall)
             {
                 await _hubCacheService.RemoveCallAsync(currentConnectionId);
                 
@@ -109,7 +113,7 @@ namespace Oyooni.Server.Hubs
             // Remove the visually impaired connection from the cache and removes all his requests if there are any
             await _hubCacheService.RemoveVIConnectionAsync(currentConnectionId);
 
-            base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
 
         /// <summary>
@@ -129,7 +133,9 @@ namespace Oyooni.Server.Hubs
             }
 
             // If the current user is already in a call
-            if (await _hubCacheService.IsInACallAsync(currentConnectionId, out var _))
+            (var inACall, _) = await _hubCacheService.IsInACallAsync(currentConnectionId);
+
+            if (inACall)
             {
                 // Send an error message
                 await Clients.Caller.Error(_stringLocalizer[Responses.Hub.AlreadyInACall].Value);
@@ -145,7 +151,7 @@ namespace Oyooni.Server.Hubs
             }
 
             // Get the most likely people to answer the visually impaired and track those volunteers for later processing
-            var electedVolunteersConnectionIds = await _hubCacheService.GetMostLikelyToAnswerAndSetAsync(currentConnectionId);
+            var electedVolunteersConnectionIds = await _hubCacheService.GetMostLikelyToAnswerAndAddHelpRequestAsync(currentConnectionId);
 
             // Send to those volunteers that a new visually impaired is needed help
             await Clients.Clients(electedVolunteersConnectionIds).NewVINeedingHelp(currentConnectionId);
@@ -180,7 +186,9 @@ namespace Oyooni.Server.Hubs
              * Check if the visually impaired is in a call already which happens when concurrent events 
              * occur where someone else accepted the call and updates to the UI for others did not arrive yet
             */
-            if (await _hubCacheService.IsInACallAsync(targetConnectionId, out var _))
+            (var inACall, _) = await _hubCacheService.IsInACallAsync(targetConnectionId);
+
+            if (inACall)
             {
                 // Notify the volunteer that the visually impaired has got accepted already by another volunteer
                 await Clients.Caller.AlreadyInACall(_stringLocalizer[Responses.Hub.AlreadyGotAcceptedForACall].Value);
@@ -227,7 +235,9 @@ namespace Oyooni.Server.Hubs
                 // If he is in a call (which he should be to be able to call this method)
                 // If not then the VI must have pressed hung up and updates to the UI haven't arrive yet for the
                 // volunteer for him not being able to hung up
-                if (await _hubCacheService.IsInACallAsync(currentConnectionId, out var vIConnectionId))
+                (var volunteerInACall, var vIConnectionId) = await _hubCacheService.IsInACallAsync(currentConnectionId);
+
+                if (volunteerInACall)
                 {
                     // Inform the VI that the volunteer has hung up
                     await Clients.Client(vIConnectionId).VolunteerHasHungup();
@@ -242,7 +252,9 @@ namespace Oyooni.Server.Hubs
             // It is a visually impaired person
 
             // If he is in a call
-            if (await _hubCacheService.IsInACallAsync(currentConnectionId, out var volunteerConnectionId))
+            (var vIInACall, var volunteerConnectionId) = await _hubCacheService.IsInACallAsync(currentConnectionId);
+
+            if (vIInACall)
             {
                 await Clients.Client(volunteerConnectionId).VisuallyImpairedHasHungUp();
 
