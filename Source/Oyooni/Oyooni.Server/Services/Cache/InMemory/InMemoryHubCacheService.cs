@@ -164,8 +164,14 @@ namespace Oyooni.Server.Services.Cache.InMemory
             // Lock the active calls store
             lock (_lockForActiveCallsList)
             {
-                // Remove the entry related to the passed connection identifier
-                return Task.FromResult(_activeCalls.RemoveAll(c => c.VIConnectionId == vIConnectionId) > 0);
+                var activeCall = _activeCalls.FirstOrDefault(a => a.VIConnectionId == vIConnectionId);
+
+                if (activeCall == null) return Task.FromResult(false);
+
+                _volunteers[activeCall.VolunteerConnectionId].IsInACall = false;
+                _activeCalls.Remove(activeCall);
+
+                return Task.FromResult(true);
             }
         }
 

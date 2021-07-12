@@ -1,0 +1,6 @@
+Charts needed:
+ERD (done) - DFD - UseCase Diagram (done) - Context diagram - Main Flow diagram - Components Diagram
+
+Gather resources about Signalling and realtime protocols used in SignalR
+Gather resources about WebRTC and the underlying technologies used
+Gahter resources about Distributed Caching and redis cache and its use for a more of a microservices architecture
