@@ -15,7 +15,7 @@ namespace Oyooni.Server.Extensions
         /// <summary>
         /// Converts a string to utf8 bytes
         /// </summary>
-        public static byte[] ToUTF8Bytes(this string value) => Encoding.UTF8.GetBytes(value);
+        public static byte[] ToUTF8Bytes(this string value) => Encoding.UTF8.GetBytes(value ?? string.Empty);
 
         /// <summary>
         /// Trims an object by trimming all string properties or returns a trimmed object if it was a string
@@ -61,7 +61,7 @@ namespace Oyooni.Server.Extensions
         /// Returns where the path is an image filename path
         /// </summary>
         public static bool IsImageFileName(this string path)
-            => SupportedFileExtensions.Images.Contains(Path.GetExtension(path));
+            => SupportedFileExtensions.Images.Contains(Path.GetExtension(path).ToLower());
 
         /// <summary>
         /// Converts the object to json

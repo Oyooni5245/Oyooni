@@ -10,6 +10,7 @@
         NewOneThousand = 6,
         TwoThousand = 7,
         FiveThousand = 8,
-        Undefined = 9
+        TwoHundred = 9,
+        Undefined = 10
     }
 }

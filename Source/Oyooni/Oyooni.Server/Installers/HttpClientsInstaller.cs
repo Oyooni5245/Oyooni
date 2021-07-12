@@ -12,9 +12,9 @@ namespace Oyooni.Server.Installers
         public IServiceCollection InstallDependencies(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             // Add Digit Recognition client
-            services.AddHttpClient(HttpClients.BankNoteRecognizerClient, client =>
+            services.AddHttpClient(HttpClients.BankNoteDetectorClient, client =>
             {
-                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:BankNoteRecognitionEndpoint"]);
+                client.BaseAddress = new Uri(configuration["AIServicesEndpoints:BankNoteDetectionEndpoint"]);
             }).AddTransientHttpErrorPolicy(builder => builder
                     .WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
 

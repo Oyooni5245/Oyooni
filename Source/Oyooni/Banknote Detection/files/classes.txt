@@ -1,0 +1,9 @@
+two_thousand
+fifty
+one_hundred
+two_hundred
+five_hundred_new
+five_hundred_old
+one_thousand_new
+one_thousand_old
+five_thousand

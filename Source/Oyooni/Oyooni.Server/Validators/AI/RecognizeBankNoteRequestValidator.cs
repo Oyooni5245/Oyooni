@@ -6,9 +6,9 @@ using Oyooni.Server.Requests.AI;
 namespace Oyooni.Server.Validators.AI
 {
     /// <summary>
-    /// Represents a validator for the <see cref="RecognizeBankNotetRequest"/> type
+    /// Represents a validator for the <see cref="DetectBankNotetRequest"/> type
     /// </summary>
-    public class RecognizeBankNoteRequestValidator : AbstractValidator<RecognizeBankNotetRequest>
+    public class RecognizeBankNoteRequestValidator : AbstractValidator<DetectBankNotetRequest>
     {
         /// <summary>
         /// Default constructor

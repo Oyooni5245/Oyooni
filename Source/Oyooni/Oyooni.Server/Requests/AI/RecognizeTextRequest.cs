@@ -18,7 +18,7 @@ namespace Oyooni.Server.Requests.AI
         public RecognizeTextRequest() { }
 
         /// <summary>
-        /// Constructs a new instanc of the <see cref="RecognizeBankNotetRequest"/> class using the pased parameters
+        /// Constructs a new instanc of the <see cref="DetectBankNotetRequest"/> class using the pased parameters
         /// </summary>
         public RecognizeTextRequest(IFormFile file) => File = file;
     }

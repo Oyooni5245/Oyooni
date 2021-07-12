@@ -23,22 +23,22 @@ namespace Oyooni.Server.Controllers
         public AIController(IMediator mediator, IStringLocalizer<Program> localizer) : base(mediator, localizer) { }
 
         [HttpPost]
-        [Route(ApiRoutes.AI.RecognizeBankNote)]
+        [Route(ApiRoutes.AI.DetectBankNote)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteRecognitionResultDto>))]
-        public async Task<IActionResult> RecognizeBankNote([FromForm]RecognizeBankNotetRequest request, CancellationToken token = default)
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteDetectionResultDto>))]
+        public async Task<IActionResult> DetectBankNote([FromForm]DetectBankNotetRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized digit
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
             
             // Return the recognition result
-            return ApiOk(data: new BankNoteRecognitionResultDto(result), message: Responses.AI.BankNoteRecognitionSuccess);
+            return ApiOk(data: new BankNoteDetectionResultDto(result), message: Responses.AI.BankNoteDetectionSuccess);
         }
 
         [HttpPost]
         [Route(ApiRoutes.AI.RecognizeColor)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteRecognitionResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ColorRecognitionResultDto>))]
         public async Task<IActionResult> RecognizeColor([FromForm] RecognizeColorRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized Colors

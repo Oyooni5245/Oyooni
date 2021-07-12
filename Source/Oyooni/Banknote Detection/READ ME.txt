@@ -1,0 +1,5 @@
+- requirements.txt contains minimum requirements, 
+may produce dependency conflicts but main packages get installed and detect.py runs fine
+
+- you can run detect.py from cmd to test everything first
+output should be [['fifty', 0.95]]

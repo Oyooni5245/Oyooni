@@ -15,5 +15,13 @@ namespace Oyooni.Server.Services.General
         /// <param name="imageFile">The image file containing the image data</param>
         /// <returns>Base64 representation of the image data</returns>
         Task<string> GetBase64ImageDataAsync(IFormFile imageFile, CancellationToken token = default);
+
+        /// <summary>
+        /// Create a temp file of the passed form file and returned its absolute path
+        /// </summary>
+        /// <param name="imageFile"></param>
+        /// <param name="token"></param>
+        /// <returns>The absolute path of the newly created temp file</returns>
+        Task<string> GetTempFileOfImage(IFormFile imageFile, CancellationToken token = default);
     }
 }

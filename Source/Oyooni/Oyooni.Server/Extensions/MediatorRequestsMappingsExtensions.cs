@@ -45,10 +45,10 @@ namespace Oyooni.Server.Extensions
             => new AddAvailableTime.Request((DayOfWeek)request.DayOfWeekId, request.From, request.To);
 
         /// <summary>
-        /// Maps <see cref="RecognizeBankNotetRequest"/> to <see cref="RecognizeBankNote.Request"/>
+        /// Maps <see cref="DetectBankNotetRequest"/> to <see cref="DetectBankNote.Request"/>
         /// </summary>
-        public static RecognizeBankNote.Request ToMediatorRequest(this RecognizeBankNotetRequest request)
-            => new RecognizeBankNote.Request(request.File);
+        public static DetectBankNote.Request ToMediatorRequest(this DetectBankNotetRequest request)
+            => new DetectBankNote.Request(request.File);
 
         /// <summary>
         /// Maps <see cref="RecognizeColorRequest"/> to <see cref="RecognizeColors.Request"/>

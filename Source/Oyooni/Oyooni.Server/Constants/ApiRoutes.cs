@@ -25,7 +25,7 @@
 
         public static class AI
         {
-            public const string RecognizeBankNote = "/api/ai/recognize-banknote";
+            public const string DetectBankNote = "/api/ai/recognize-banknote";
             public const string RecognizeColor = "/api/ai/recognize-color";
             public const string CaptionImage = "/api/ai/caption-image";
             public const string RecognizeText = "/api/ai/recognize-text";
