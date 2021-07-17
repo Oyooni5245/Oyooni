@@ -54,7 +54,7 @@ namespace Oyooni.Server.Extensions
         /// Maps <see cref="RecognizeColorRequest"/> to <see cref="RecognizeColors.Request"/>
         /// </summary>
         public static RecognizeColors.Request ToMediatorRequest(this RecognizeColorRequest request)
-            => new RecognizeColors.Request(request.File, request.NumberOfColorsToDetect);
+            => new RecognizeColors.Request(request.File);
 
         /// <summary>
         /// Maps <see cref="ChangePasswordRequest"/> to <see cref="ChangePassword.Request"/>
