@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Oyooni.Server.Enumerations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,11 +10,10 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
     public interface IColorRecognitionService
     {
         /// <summary>
-        /// Recognizes colors in an image using the base64 representation of the image
+        /// Recognizes colors in an image using the passed image path
         /// </summary>
-        /// <param name="base64Data">Images bytes encoded in base64 format</param>
-        /// /// <param name="k">Number of colors to detect</param>
-        /// <returns>A dictionary where the keys are the detected color names and the values are the ratios of the corresponding color</returns>
-        Task<Dictionary<string, float>> RecognizeColorsInImageDataAsync(string base64Data, int k = 3, CancellationToken token = default);
+        /// <param name="imagePath">The image path to recognize the color in</param>
+        /// <returns>The recongized dominant image</returns>
+        Task<RecognizedColor> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default);
     }
 }

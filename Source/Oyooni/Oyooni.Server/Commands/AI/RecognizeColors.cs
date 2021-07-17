@@ -8,6 +8,7 @@ using System;
 using Oyooni.Server.Services.AI.ColorRecognition;
 using System.Collections.Generic;
 using Oyooni.Server.Services.General;
+using Oyooni.Server.Enumerations;
 
 namespace Oyooni.Server.Commands.AI
 {
@@ -19,7 +20,7 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the request for the <see cref="RecognizeColors"/> command
         /// </summary>
-        public class Request : IRequest<Dictionary<string, float>>
+        public class Request : IRequest<RecognizedColor>
         {
             /// <summary>
             /// The image file containing the colors to be recognized
@@ -27,21 +28,15 @@ namespace Oyooni.Server.Commands.AI
             public IFormFile ImageFile { get; }
 
             /// <summary>
-            /// The number of colors to be detected in the image
-            /// </summary>
-            public int NumberOfColorsToDetect { get; set; }
-
-            /// <summary>
             /// Constructs a new instance of the <see cref="Request"/> using the passed parameters
             /// </summary>
-            public Request(IFormFile formFile, int numberOfColorsToDetect = 3)
-                => (ImageFile, NumberOfColorsToDetect) = (formFile, numberOfColorsToDetect);
+            public Request(IFormFile formFile) => (ImageFile) = (formFile);
         }
 
         /// <summary>
         /// Represents the handler for the <see cref="Request"/>
         /// </summary>
-        public class Handler : IRequestHandler<Request, Dictionary<string, float>>
+        public class Handler : IRequestHandler<Request, RecognizedColor>
         {
             /// <summary>
             /// The color recognizer service
@@ -66,46 +61,19 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Handles when a <see cref="Request"/> is sent
             /// </summary>
-            public async Task<Dictionary<string, float>> Handle(Request request, CancellationToken token = default)
+            public async Task<RecognizedColor> Handle(Request request, CancellationToken token = default)
             {
-                // Get the image data in base64 format
-                var imageData = await _imageService.GetBase64ImageDataAsync(request.ImageFile, token);
+                // Get a temp file of the image file passed
+                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
 
-                // Recognize colors from image data
-                var result = await _colorRecognizer.RecognizeColorsInImageDataAsync(imageData, request.NumberOfColorsToDetect, token);
+                // Recognize color from image file
+                var result = await _colorRecognizer.RecognizeColorInImageAsync(imageTempFile, token);
 
+                // Delete the temp image
+                File.Delete(imageTempFile);
+
+                // Return results
                 return result;
-
-                #region By Image
-
-                //// Get image extension
-                //var imageExtension = Path.GetExtension(request.ImageFile.FileName);
-
-                //// Create a temp file and replace the default .tmp extension with the image file's extension
-                //var tempFilePath = Path.GetTempFileName();
-
-                //// Delete the temp file as it is 
-                //File.Delete(tempFilePath);
-
-                //// Change the extension of the temp file
-                //var imageTempFile = Path.ChangeExtension(tempFilePath, imageExtension);
-
-                //using (var stream = new FileStream(imageTempFile, FileMode.Create, FileAccess.Write))
-                //{
-                //    // Copy the image data to the memory stream
-                //    await request.ImageFile.CopyToAsync(stream, token);
-                //}
-
-                //// Recognize color from image file
-                //var result2 = await _colorRecognizer.RecognizeColorFromImage(imageTempFile, token);
-
-                //// Delete the temp image file if it exists
-                //if (File.Exists(imageTempFile)) File.Delete(imageTempFile);
-
-                //// Return the result
-                //return result2;
-
-                #endregion
             }
         }
     }

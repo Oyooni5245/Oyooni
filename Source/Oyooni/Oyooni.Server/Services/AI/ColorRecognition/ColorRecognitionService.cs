@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
+using Oyooni.Server.Enumerations;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -31,36 +32,24 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         }
 
         /// <summary>
-        /// Recognizes colors in an image using the base64 representation of the image
+        /// Recognizes colors in an image using the passed image path
         /// </summary>
-        /// <param name="base64Data">Images bytes encoded in base64 format</param>
-        /// <param name="k">Number of colors to detect</param>
-        /// <returns>A dictionary where the keys are the detected color names and the values are the ratios of the corresponding color</returns>
-        public async Task<Dictionary<string, float>> RecognizeColorsInImageDataAsync(string base64Data, int k = 3, CancellationToken token = default)
+        /// <param name="imagePath">The image path to recognize the color in</param>
+        /// <returns>The recongized dominant image</returns>
+        public async Task<RecognizedColor> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default)
         {
-            // Send a request to the local server with the image data and the number of colors to detect
-            var response = await _client.PostAsync("/recognize-colors",
+            // Send a request to the local server with the image path
+            var response = await _client.PostAsync("/recognize-color",
                 new StringContent(JsonSerializer.Serialize(new
                 {
-                    Base64Data = base64Data,
-                    K = k < 1 ? 3 : k
+                    ImagePath = imagePath,
                 }), Encoding.UTF8, "application/json"), token);
 
             // Parse the response
             var rootJObject = JObject.Parse(await response.Content.ReadAsStringAsync(token));
 
-            // Create the dictionary to be returned
-            var dictionary = new Dictionary<string, float>();
-
-            // Loop over each pair
-            foreach (var pair in rootJObject)
-            {
-                // Add to the dicionary
-                dictionary.Add(pair.Key, pair.Value.Value<float>());
-            }
-
             // Return the dictionary
-            return dictionary;
+            return (RecognizedColor)rootJObject["recognizedColor"].Value<int>();
         }
     }
 }

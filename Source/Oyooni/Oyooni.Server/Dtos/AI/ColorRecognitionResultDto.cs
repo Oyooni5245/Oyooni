@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Oyooni.Server.Enumerations;
 
 namespace Oyooni.Server.Dtos.AI
 {
@@ -8,9 +8,9 @@ namespace Oyooni.Server.Dtos.AI
     public class ColorRecognitionResultDto
     {
         /// <summary>
-        /// The key-value pairs that represent the recognized colors and their corresponding ratios
+        /// The recognized colors
         /// </summary>
-        public Dictionary<string, float> RecognizedColors { get; set; }
+        public RecognizedColor RecognizedColor { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -20,6 +20,6 @@ namespace Oyooni.Server.Dtos.AI
         /// <summary>
         /// Constructs a new instance of the <see cref="ColorRecognitionResultDto"/> class using the passed parameters
         /// </summary>
-        public ColorRecognitionResultDto(Dictionary<string, float> recognizedColors) => RecognizedColors = recognizedColors;
+        public ColorRecognitionResultDto(RecognizedColor recognizedColor) => RecognizedColor = recognizedColor;
     }
 }
