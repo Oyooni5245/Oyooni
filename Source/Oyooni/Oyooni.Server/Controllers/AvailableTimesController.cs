@@ -12,7 +12,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Oyooni.Server.Extensions;
-using System.Linq;
 using Oyooni.Server.Requests.AvailableTimes;
 
 namespace Oyooni.Server.Controllers
@@ -32,7 +31,7 @@ namespace Oyooni.Server.Controllers
         [HttpGet]
         [Route(ApiRoutes.AvailableTimes.Base)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<AvailableTimeDto>>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IDictionary<int, IEnumerable<AvailableTimeDto>>>))]
         public async Task<IActionResult> Get(CancellationToken token = default)
         {
             var result = await _mediator.Send(new GetAvailableTimes.Request(), token);
@@ -48,7 +47,7 @@ namespace Oyooni.Server.Controllers
         {
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
 
-            return ApiOk(data: result.ToGroupedAvailableTimeDto(), message: Responses.AvailableTimes.TimeAdded);
+            return ApiOk(data: result.ToAvailableTimeDto(), message: Responses.AvailableTimes.TimeAdded);
         }
 
         [HttpDelete]

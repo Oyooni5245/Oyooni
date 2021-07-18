@@ -26,8 +26,18 @@ namespace Oyooni.Server.Extensions
             {
                 Id = t.Id,
                 From = t.From.ToString(@"hh\:mm"),
-                To = t.To.ToString(@"hh\:mm")
+                To = t.To.ToString(@"hh\:mm"),
+                DayOfWeekId = t.DayOfWeekId
             }).GroupBy(t => t.DayOfWeekId).ToDictionary(group => group.Key, group => group.ToList());
         }
+
+        public static IEnumerable<AvailableTimeDto> ToAvailableTimeDto(this IEnumerable<AvailableTime> times)
+            => times.Select(t => new AvailableTimeDto
+            {
+                Id = t.Id,
+                From = t.From.ToString(@"hh\:mm"),
+                To = t.To.ToString(@"hh\:mm"),
+                DayOfWeekId = t.DayOfWeekId
+            });
     }
 }

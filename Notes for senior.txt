@@ -1,5 +1,5 @@
 Charts needed:
-ERD (done) - DFD - UseCase Diagram (done) - Context diagram - Main Flow diagram - Components Diagram
+ERD (done) - DFD - UseCase Diagram (done) - Context diagram (done) - Main Flow diagram - Components Diagram (done)
 
 Gather resources about Signalling and realtime protocols used in SignalR
 Gather resources about WebRTC and the underlying technologies used

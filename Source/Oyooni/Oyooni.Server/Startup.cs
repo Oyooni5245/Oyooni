@@ -6,9 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Oyooni.Server.Extensions;
 using Oyooni.Server.Hubs;
 using Oyooni.Server.Middlewares;
-using StackExchange.Redis;
 using System;
-using ServiceStack.Redis;
 
 namespace Oyooni.Server
 {

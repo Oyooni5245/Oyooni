@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Oyooni.Server.Filters;
 using System.Reflection;
 
@@ -26,6 +27,7 @@ namespace Oyooni.Server.Installers
 
                 // Add the data validation filter
                 options.Filters.Add<DataValidationFilter>();
+
             })
                 // Configure the bahavior of the api as suppress the model state when invalid
                 .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)

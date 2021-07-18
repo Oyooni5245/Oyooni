@@ -123,7 +123,7 @@ namespace Oyooni.Server.Commands.AvailableTimes
                     currentAvailableTimes.Add(newTime);
 
                     // Return the times
-                    return currentAvailableTimes;
+                    return currentAvailableTimes.OrderBy(a => a.From);
                 }
                 
                 // If start and end times are not contained in any previous time
@@ -154,7 +154,7 @@ namespace Oyooni.Server.Commands.AvailableTimes
                     await _context.SaveChangesAsync(_loggedInUserService.UserId, token);
 
                     // Return the times
-                    return currentAvailableTimes;
+                    return currentAvailableTimes.OrderBy(a => a.From).ToList();
                 }
 
                 // If start time is not contained and the end time is contained
@@ -177,7 +177,7 @@ namespace Oyooni.Server.Commands.AvailableTimes
                     await _context.SaveChangesAsync(_loggedInUserService.UserId, token);
 
                     // Return the available times
-                    return currentAvailableTimes;
+                    return currentAvailableTimes.OrderBy(a => a.From).ToList();
                 }
 
                 // If start time is contained and the end time is not contained
@@ -200,9 +200,9 @@ namespace Oyooni.Server.Commands.AvailableTimes
                     await _context.SaveChangesAsync(_loggedInUserService.UserId, token);
 
                     // Return the user's current available times
-                    return currentAvailableTimes;
+                    return currentAvailableTimes.OrderBy(a => a.From).ToList();
                 }
-
+                // A possible object cycle was detected. This can either be due to a cycle or if the object depth is larger than the maximum allowed depth of 32. Consider using ReferenceHandler.Preserve on JsonSerializerOptions to support cycles.
                 // If the start time and the end time are contained
                 if (containingTimeForStart is not null && containingTimeForEnd is not null)
                 {
@@ -227,7 +227,7 @@ namespace Oyooni.Server.Commands.AvailableTimes
                     await _context.SaveChangesAsync(_loggedInUserService.UserId, token);
 
                     // Return the user's current available times
-                    return currentAvailableTimes;
+                    return currentAvailableTimes.OrderBy(a => a.From).ToList();
                 }
 
                 throw new BaseException(message: Responses.General.ErrorOccured, HttpStatusCode.InternalServerError);
