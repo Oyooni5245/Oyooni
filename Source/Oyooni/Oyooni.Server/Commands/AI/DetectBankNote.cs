@@ -39,7 +39,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// The digit detector service
             /// </summary>
-            protected readonly ISyrianBankNoteDetectionService _bankNoteDetectionService;
+            protected readonly IBankNoteDetectionService _bankNoteDetectionService;
 
             /// <summary>
             /// The image service
@@ -49,7 +49,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Constructs a new instance of the <see cref="Handler"/> class using the passed parameters
             /// </summary>
-            public Handler(ISyrianBankNoteDetectionService digitRecognizer,
+            public Handler(IBankNoteDetectionService digitRecognizer,
                 IImageService imageService)
             {
                 _bankNoteDetectionService = digitRecognizer;
@@ -64,7 +64,7 @@ namespace Oyooni.Server.Commands.AI
                 // Get a temp file of the image file passed
                 var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
 
-                // Recognize digit from image file
+                // Recognize the banknote from the image file
                 var result = await _bankNoteDetectionService.DetectBankNoteAsync(imageTempFile, token);
 
                 // Delete the temp image

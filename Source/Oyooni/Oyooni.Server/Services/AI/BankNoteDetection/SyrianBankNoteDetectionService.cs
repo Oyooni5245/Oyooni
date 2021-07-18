@@ -15,8 +15,8 @@ namespace Oyooni.Server.Services.AI.BankNoteDetection
     /// <summary>
     /// Represents a syrian bank note recognizer service
     /// </summary>
-    [Injected(ServiceLifetime.Scoped, typeof(ISyrianBankNoteDetectionService), ignoreForNow: false)]
-    public class SyrianBankNoteDetectionService : ISyrianBankNoteDetectionService
+    [Injected(ServiceLifetime.Scoped, typeof(IBankNoteDetectionService), ignoreForNow: false)]
+    public class SyrianBankNoteDetectionService : IBankNoteDetectionService
     {
         /// <summary>
         /// The http client used to talk to the banknote detector service

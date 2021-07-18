@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 namespace Oyooni.Server.Services.AI.BankNoteDetection
 {
     /// <summary>
-    /// Represents a syrian bank note recognizer service contract
+    /// Represents a bank note recognizer service contract
     /// </summary>
-    public interface ISyrianBankNoteDetectionService
+    public interface IBankNoteDetectionService
     {
         /// <summary>
-        /// Recognizes a syrian bank note from an image data
+        /// Recognizes a bank note from the passed image
         /// </summary>
         /// <param name="base64ImageData">The image data to recognize the bank note from</param>
         Task<SyrianBankNoteTypes> DetectBankNoteAsync(string imagePath, CancellationToken token = default);

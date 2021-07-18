@@ -5,6 +5,7 @@ using Oyooni.Server.Services.AI.ImageCaptioning;
 using Oyooni.Server.Services.General;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,8 +63,17 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<string> Handle(Request request, CancellationToken token)
             {
-                return await _imageCaptioningService.CaptionImageAsync(
-                    await _imageService.GetBase64ImageDataAsync(request.ImageFile, token), token);
+                // Get a temp file of the image file passed
+                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
+
+                // Caption the temp image file
+                var caption = await _imageCaptioningService.CaptionImageAsync(imageTempFile, token);
+
+                // Delete the temp image
+                File.Delete(imageTempFile);
+
+                // Return results
+                return caption;
             }
         }
     }

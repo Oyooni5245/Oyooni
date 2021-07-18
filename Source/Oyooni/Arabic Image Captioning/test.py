@@ -1,16 +1,14 @@
+import tensorflow as tf
 import model
 import utils
 import warnings
 warnings.filterwarnings("ignore")
-import tensorflow as tf
 
-tokenizer = model.tokenizer
-transformer = model.create_model()
-
-def evaluate(image):
+def evaluate(image, tokenizer, transformer):
     temp_input = tf.expand_dims(utils.load_image(image)[0], 0)
     img_tensor_val = model.image_features_extract_model(temp_input)
-    img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
+    img_tensor_val = tf.reshape(
+        img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
 
     start_token = tokenizer.word_index['<start>']
     end_token = tokenizer.word_index['<end>']
@@ -24,7 +22,8 @@ def evaluate(image):
         dec_mask = utils.create_masks_decoder(output)
 
         # predictions.shape == (batch_size, seq_len, vocab_size)
-        predictions, attention_weights = transformer(img_tensor_val, output, False, dec_mask)
+        predictions, attention_weights = transformer(
+            img_tensor_val, output, False, dec_mask)
 
         # select the last word from the seq_len dimension
         predictions = predictions[:, -1:, :]  # (batch_size, 1, vocab_size)
@@ -40,11 +39,13 @@ def evaluate(image):
 
     return result, tf.squeeze(output, axis=0), attention_weights
 
-def test(image_path):
-    caption, result, attention_weights = evaluate(image_path)
-    final_caption =[]
+
+def caption_image(image_path, tokenizer, transformer):
+    caption, result, attention_weights = evaluate(
+        image_path, tokenizer, transformer)
+    final_caption = []
     for i in range(len(caption)-1):
-        if caption[i] !='<unk>' and caption[i] != caption[i+1]:
+        if caption[i] != '<unk>' and caption[i] != caption[i+1]:
             final_caption.append(caption[i])
         if i == len(caption)-2 and caption[i] != '<unk>':
             final_caption.append(caption[i+1])
@@ -52,18 +53,18 @@ def test(image_path):
     return final_caption
 
 
-#Once everything is cached, the below command takes 2 seconds to execute
-print(test("test_images/motor.jpg"))
+# Once everything is cached, the below command takes 2 seconds to execute
+# print(test("test_images/motor.jpg"))
 
-#print(test("test_images/asian-woman.jpg"))
-#print(test("test_images/beach2.jpg"))
-#print(test("test_images/climbing5.jpg"))
-#print(test("test_images/kids-bike.jpg"))
-#print(test("test_images/old-woman2.jpg"))
-#print(test("test_images/pool3.jpg"))
-#print(test("test_images/rugby.jpg"))
-#print(test("test_images/snow5.jpg"))
-#print(test("test_images/sports.jpeg"))
-#print(test("test_images/young-man-climbing.jpg"))
-#print(test("test_images/dogs2.jpg"))
-#print(test("test_images/dogs4.jpeg"))
+# print(test("test_images/asian-woman.jpg"))
+# print(test("test_images/beach2.jpg"))
+# print(test("test_images/climbing5.jpg"))
+# print(test("test_images/kids-bike.jpg"))
+# print(test("test_images/old-woman2.jpg"))
+# print(test("test_images/pool3.jpg"))
+# print(test("test_images/rugby.jpg"))
+# print(test("test_images/snow5.jpg"))
+# print(test("test_images/sports.jpeg"))
+# print(test("test_images/young-man-climbing.jpg"))
+# print(test("test_images/dogs2.jpg"))
+# print(test("test_images/dogs4.jpeg"))
