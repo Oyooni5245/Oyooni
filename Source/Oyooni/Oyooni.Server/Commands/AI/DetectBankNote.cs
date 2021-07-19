@@ -37,7 +37,7 @@ namespace Oyooni.Server.Commands.AI
         public class Handler : IRequestHandler<Request, SyrianBankNoteTypes>
         {
             /// <summary>
-            /// The digit detector service
+            /// The banknote detector service
             /// </summary>
             protected readonly IBankNoteDetectionService _bankNoteDetectionService;
 

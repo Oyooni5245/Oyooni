@@ -25,53 +25,53 @@ namespace Oyooni.Server.Controllers
         [HttpPost]
         [Route(ApiRoutes.AI.DetectBankNote)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<BankNoteDetectionResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BankNoteDetectionResultDto))]
         public async Task<IActionResult> DetectBankNote([FromForm]DetectBankNotetRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized digit
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
             
             // Return the recognition result
-            return ApiOk(data: new BankNoteDetectionResultDto(result), message: Responses.AI.BankNoteDetectionSuccess);
+            return Ok(new BankNoteDetectionResultDto(result));
         }
 
         [HttpPost]
         [Route(ApiRoutes.AI.RecognizeColor)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ColorRecognitionResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ColorRecognitionResultDto))]
         public async Task<IActionResult> RecognizeColor([FromForm] RecognizeColorRequest request, CancellationToken token = default)
         {
             // Send a command to recognize and get the recognized Colors
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
 
             // Return the recognition result
-            return ApiOk(data: new ColorRecognitionResultDto(result), message: Responses.AI.ColorRecognitionSuccess);
+            return Ok(new ColorRecognitionResultDto(result));
         }
 
         [HttpPost]
         [Route(ApiRoutes.AI.CaptionImage)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ImageCaptioningResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ImageCaptioningResultDto))]
         public async Task<IActionResult> CaptionImage([FromForm] CaptionImageRequest request, CancellationToken token = default)
         {
             // Send a command to caption the image
             var result = await _mediator.Send(request.ToMediatorRequest(), token);
 
             // Return the result
-            return ApiOk(data: new ImageCaptioningResultDto(result), message: Responses.AI.ImageCaptionedSuccess);
+            return Ok(new ImageCaptioningResultDto(result));
         }
 
         [HttpPost]
         [Route(ApiRoutes.AI.RecognizeText)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ApiErrorResponse))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<TextRecognitionResultDto>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TextRecognitionResultDto))]
         public async Task<IActionResult> RecognizeText([FromForm] RecognizeTextRequest request, CancellationToken token = default)
         {
             // Send a command to caption the image
-            var result = await _mediator.Send(request.ToMediatorRequest(), token);
+            (var brandName, var subText)= await _mediator.Send(request.ToMediatorRequest(), token);
 
             // Return the result
-            return ApiOk(data: new TextRecognitionResultDto(result), message: Responses.AI.ImageCaptionedSuccess);
+            return Ok(new TextRecognitionResultDto(subText, brandName));
         }
     }
 }

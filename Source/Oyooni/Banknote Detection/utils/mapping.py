@@ -19,5 +19,7 @@ def map_to_server_type(predicted_class):
         server_type = 5
     elif (predicted_class == 'five_thousand'):
         server_type = 8
+    else:
+        server_type = 10
 
     return server_type

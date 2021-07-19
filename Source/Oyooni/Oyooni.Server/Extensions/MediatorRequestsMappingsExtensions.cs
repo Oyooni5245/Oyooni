@@ -72,6 +72,6 @@ namespace Oyooni.Server.Extensions
         /// Maps <see cref="RecognizeTextRequest"/> to <see cref="RecognizeText.Request"/>
         /// </summary>
         public static RecognizeText.Request ToMediatorRequest(this RecognizeTextRequest request)
-            => new RecognizeText.Request(request.File);
+            => new RecognizeText.Request(request.File, request.IsFromDocument);
     }
 }

@@ -1,12 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Oyooni.Server.Constants;
 using Oyooni.Server.Services.AI.ImageCaptioning;
 using Oyooni.Server.Services.General;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

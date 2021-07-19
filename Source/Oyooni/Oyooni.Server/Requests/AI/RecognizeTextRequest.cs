@@ -13,6 +13,11 @@ namespace Oyooni.Server.Requests.AI
         public IFormFile File { get; set; }
 
         /// <summary>
+        /// Indicates whether the passed image is a document image or just a general image
+        /// </summary>
+        public bool IsFromDocument { get; set; }
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public RecognizeTextRequest() { }
@@ -20,6 +25,6 @@ namespace Oyooni.Server.Requests.AI
         /// <summary>
         /// Constructs a new instanc of the <see cref="DetectBankNotetRequest"/> class using the pased parameters
         /// </summary>
-        public RecognizeTextRequest(IFormFile file) => File = file;
+        public RecognizeTextRequest(IFormFile file, bool isFromDocument) => (File, IsFromDocument) = (file, isFromDocument);
     }
 }
