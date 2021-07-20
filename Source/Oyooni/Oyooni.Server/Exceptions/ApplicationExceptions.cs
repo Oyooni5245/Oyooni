@@ -90,4 +90,15 @@ namespace Oyooni.Server.Exceptions
         /// </summary>
         public ConflictException(string message) : base(message, HttpStatusCode.Conflict) { }
     }
+
+    /// <summary>
+    /// Represents a sevice exception
+    /// </summary>
+    public class ServiceUnavailableException : BaseException
+    {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="ConflictException"/> class using the passed parameters
+        /// </summary>
+        public ServiceUnavailableException(string message) : base(message, HttpStatusCode.ServiceUnavailable) { }
+    }
 }

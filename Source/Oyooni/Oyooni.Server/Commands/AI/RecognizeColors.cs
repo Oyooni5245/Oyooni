@@ -9,6 +9,8 @@ using Oyooni.Server.Services.AI.ColorRecognition;
 using System.Collections.Generic;
 using Oyooni.Server.Services.General;
 using Oyooni.Server.Enumerations;
+using Oyooni.Server.Exceptions;
+using Oyooni.Server.Constants;
 
 namespace Oyooni.Server.Commands.AI
 {
@@ -64,16 +66,18 @@ namespace Oyooni.Server.Commands.AI
             public async Task<RecognizedColor> Handle(Request request, CancellationToken token = default)
             {
                 // Get a temp file of the image file passed
-                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
+                using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))
+                {
+                    try
+                    {
+                        // Recognize color from image file
+                        var result = await _colorRecognizer.RecognizeColorInImageAsync(imageTempFile.PathToTempFile, token);
 
-                // Recognize color from image file
-                var result = await _colorRecognizer.RecognizeColorInImageAsync(imageTempFile, token);
-
-                // Delete the temp image
-                File.Delete(imageTempFile);
-
-                // Return results
-                return result;
+                        // Return results
+                        return result;
+                    } catch (Exception) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                    finally { imageTempFile.Dispose(); }
+                }
             }
         }
     }

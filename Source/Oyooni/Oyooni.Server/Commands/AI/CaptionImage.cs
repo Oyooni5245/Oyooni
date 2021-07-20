@@ -1,8 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Oyooni.Server.Constants;
+using Oyooni.Server.Exceptions;
 using Oyooni.Server.Services.AI.ImageCaptioning;
 using Oyooni.Server.Services.General;
+using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -60,16 +64,18 @@ namespace Oyooni.Server.Commands.AI
             public async Task<string> Handle(Request request, CancellationToken token)
             {
                 // Get a temp file of the image file passed
-                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
+                using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))
+                {
+                    try
+                    {
+                        // Caption the temp image file
+                        var caption = await _imageCaptioningService.CaptionImageAsync(imageTempFile.PathToTempFile, token);
 
-                // Caption the temp image file
-                var caption = await _imageCaptioningService.CaptionImageAsync(imageTempFile, token);
-
-                // Delete the temp image
-                File.Delete(imageTempFile);
-
-                // Return results
-                return caption;
+                        // Return results
+                        return caption;
+                    } catch (Exception) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                      finally { imageTempFile.Dispose(); }
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Oyooni.Server.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,6 +23,6 @@ namespace Oyooni.Server.Services.General
         /// <param name="imageFile"></param>
         /// <param name="token"></param>
         /// <returns>The absolute path of the newly created temp file</returns>
-        Task<string> GetTempFileOfImage(IFormFile imageFile, CancellationToken token = default);
+        Task<DisposableTempFile> GetTempFileOfImage(IFormFile imageFile, CancellationToken token = default);
     }
 }

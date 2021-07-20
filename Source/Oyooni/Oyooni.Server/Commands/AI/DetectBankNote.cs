@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Oyooni.Server.Constants;
 using Oyooni.Server.Enumerations;
+using Oyooni.Server.Exceptions;
 using Oyooni.Server.Services.AI.BankNoteDetection;
 using Oyooni.Server.Services.General;
 using System;
@@ -62,16 +64,18 @@ namespace Oyooni.Server.Commands.AI
             public async Task<SyrianBankNoteTypes> Handle(Request request, CancellationToken token = default)
             {
                 // Get a temp file of the image file passed
-                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
+                using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))
+                {
+                    try
+                    {
+                        // Recognize the banknote from the image file
+                        var result = await _bankNoteDetectionService.DetectBankNoteAsync(imageTempFile.PathToTempFile, token);
 
-                // Recognize the banknote from the image file
-                var result = await _bankNoteDetectionService.DetectBankNoteAsync(imageTempFile, token);
-
-                // Delete the temp image
-                File.Delete(imageTempFile);
-
-                // Return results
-                return result;
+                        // Return results
+                        return result;
+                    } catch (Exception) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                    finally { imageTempFile.Dispose(); }
+                }
             }
         }
     }

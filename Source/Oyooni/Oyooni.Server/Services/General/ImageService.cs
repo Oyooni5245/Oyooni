@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Oyooni.Server.Attributes;
+using Oyooni.Server.Common;
 using System;
 using System.IO;
 using System.Threading;
@@ -34,11 +35,11 @@ namespace Oyooni.Server.Services.General
         /// <param name="imageFile"></param>
         /// <param name="token"></param>
         /// <returns>The absolute path of the newly created temp file</returns>
-        public async Task<string> GetTempFileOfImage(IFormFile imageFile, CancellationToken token = default)
+        public async Task<DisposableTempFile> GetTempFileOfImage(IFormFile imageFile, CancellationToken token = default)
         {
             // Create a temp file and change its extension to the passed image file extension
             var tempFile = Path.GetTempFileName();
-            var tempFilePath = Path.ChangeExtension(tempFile, Path.GetExtension(imageFile.FileName));
+            var tempImageFilePath = Path.ChangeExtension(tempFile, Path.GetExtension(imageFile.FileName));
 
             File.Delete(tempFile);
             
@@ -47,7 +48,7 @@ namespace Oyooni.Server.Services.General
             {
                 // Copy the image data to the memory stream
                 await imageFile.CopyToAsync(memoryStream, token);
-                using (var stream = File.Create(tempFilePath))
+                using (var stream = File.Create(tempImageFilePath))
                 {
                     // Get the image data as bytes
                     var data = memoryStream.ToArray();
@@ -58,7 +59,7 @@ namespace Oyooni.Server.Services.General
             }
 
             // Return the temp file
-            return tempFilePath;
+            return new DisposableTempFile(tempImageFilePath);
         }
     }
 }

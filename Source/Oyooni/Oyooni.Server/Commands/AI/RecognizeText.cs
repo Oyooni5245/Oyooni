@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Oyooni.Server.Constants;
+using Oyooni.Server.Exceptions;
 using Oyooni.Server.Services.AI.TextRecogntion;
 using Oyooni.Server.Services.General;
-using System.IO;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,17 +67,20 @@ namespace Oyooni.Server.Commands.AI
             /// </summary>
             public async Task<(string, string[])> Handle(Request request, CancellationToken token)
             {
-                // Get a temp file of the image file passed
-                var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token);
+                // Get a temp file of the image file passed   
+                using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))
+                {
+                    try
+                    {
+                        // Recognize the text from the image file
+                        var result = await _textRecognitionService
+                            .RecognizeTextAsync(imageTempFile.PathToTempFile, request.IsFromDocument, token);
 
-                // Recognize the text from the image file
-                var result = await _textRecognitionService.RecognizeTextAsync(imageTempFile, request.IsFromDocument, token);
-
-                // Delete the temp image
-                File.Delete(imageTempFile);
-
-                // Return results
-                return result;
+                        // Return results
+                        return result;
+                    } catch (Exception) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                    finally { imageTempFile.Dispose(); }
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ namespace Oyooni.Server.Constants
         {
             public const string UnAuthorizedAction = "Unauthorized action";
             public const string ErrorOccured = "An error occured";
+            public const string ServiceUnavailable = "Service is unavailable";
         }
 
         /// <summary>
