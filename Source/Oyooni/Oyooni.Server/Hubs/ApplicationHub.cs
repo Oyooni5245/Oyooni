@@ -67,7 +67,7 @@ namespace Oyooni.Server.Hubs
         {
             var currentConnectionId = Context.ConnectionId;
             var isVolunteer = !_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe();
-            
+
             // If it was a volunteer
             if (isVolunteer)
             {
@@ -95,7 +95,7 @@ namespace Oyooni.Server.Hubs
             if (vIInACall)
             {
                 await _hubCacheService.RemoveCallAsync(currentConnectionId);
-                
+
                 await Clients.Client(volunteerConnectionId).VisuallyImpaireDisconnected(currentConnectionId, _stringLocalizer[Responses.Hub.VisuallyImpairedDisconnected].Value);
             }
 
@@ -277,7 +277,7 @@ namespace Oyooni.Server.Hubs
                 // Remove the help request initiated by the VI
                 await _hubCacheService.RemoveHelpRequestAsync(currentConnectionId);
             }
-            
+
             return true;
         }
 
@@ -286,29 +286,33 @@ namespace Oyooni.Server.Hubs
         /// </summary>
         /// <param name="signal">Data to be send to the target connection</param>
         /// <param name="targetConnectionId">The target connection to send the signal to</param>
-        public async Task<bool> SendSignal(string targetConnectionId, string signal)
+        public async Task<bool> SendSignal(string signal)
         {
-            // If the target user disconnected
-            if (!await _hubCacheService.StillExistsAsync(targetConnectionId))
-            {
-                // If it is a visually impaired person
-                if (_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe())
-                    // Send to the VI that the volunteer has disconnected
-                    await Clients.Client(Context.ConnectionId).VolunteerDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VolunteerDisconnected].Value);
-                // Else it is a volunteer
-                else
-                    // Send to the volunteer that the VI person has disconnected
-                    await Clients.Client(Context.ConnectionId).VisuallyImpaireDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VisuallyImpairedDisconnected].Value);
+            //    // If the target user disconnected
+            //    if (!await _hubCacheService.StillExistsAsync(targetConnectionId))
+            //    {
+            //        // If it is a visually impaired person
+            //        if (_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe())
+            //            // Send to the VI that the volunteer has disconnected
+            //            await Clients.Client(Context.ConnectionId).VolunteerDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VolunteerDisconnected].Value);
+            //        // Else it is a volunteer
+            //        else
+            //            // Send to the volunteer that the VI person has disconnected
+            //            await Clients.Client(Context.ConnectionId).VisuallyImpaireDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VisuallyImpairedDisconnected].Value);
 
+            //        return false;
+            //    }
+
+            (var isInACall, var otherConnectionId) = await _hubCacheService.IsInACallAsync(Context.ConnectionId);
+
+            if (!isInACall)
+            {
+                await Clients.Caller.Error(_stringLocalizer[Responses.Hub.NotInACall].Value);
                 return false;
             }
 
-            // If those people are indeed in a call
-            if (!await _hubCacheService.AreInACallAsync(Context.ConnectionId, targetConnectionId))
-                return false;
-
             // Then send the signal to the target user
-            await Clients.Client(targetConnectionId).RecievedSignal(Context.ConnectionId, signal);
+            await Clients.Client(otherConnectionId).RecievedSignal(signal);
 
             return true;
         }
@@ -317,7 +321,7 @@ namespace Oyooni.Server.Hubs
     public interface IServerEvents
     {
         Task ConnectedSuccessfully(string connectionId);
-        Task RecievedSignal(string senderConnectionId, string signal);
+        Task RecievedSignal(string signal);
         Task NewVINeedingHelp(string connectionId);
         Task Error(string errorMessage);
         Task VolunteerDisconnected(string connectionId, string message);

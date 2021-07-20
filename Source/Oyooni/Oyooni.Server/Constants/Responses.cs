@@ -61,6 +61,7 @@ namespace Oyooni.Server.Constants
             public const string VisuallyImpairedDisconnected = "The visually impaired person has disconnected";
             public const string CantAcceptCall = "Can't accept the call";
             public const string VICancelledHelpRequest = "The visually impaired person has cancelled the help request";
+            public const string NotInACall = "You are not in a call";
         }
     }
 }
