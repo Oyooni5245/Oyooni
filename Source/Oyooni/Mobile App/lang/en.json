@@ -1,0 +1,8 @@
+{
+  "screen_size_button": "This is a screen size button that functions on double click to start recording speech to help the user run a command",
+  "list_of_commands": "Here's the list of commands that can be called in Home page:",
+  "command1": "Command number 1 is camera which is basically to open the camera and capture images to receive image information",
+  "command1_info": "which opens the camera and capture images to receive image information",
+  "command2": "Command number 2 is help",
+  "command2_info": "requested to re-list all the commands"
+}

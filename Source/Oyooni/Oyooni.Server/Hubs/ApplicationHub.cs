@@ -288,21 +288,6 @@ namespace Oyooni.Server.Hubs
         /// <param name="targetConnectionId">The target connection to send the signal to</param>
         public async Task<bool> SendSignal(string signal)
         {
-            //    // If the target user disconnected
-            //    if (!await _hubCacheService.StillExistsAsync(targetConnectionId))
-            //    {
-            //        // If it is a visually impaired person
-            //        if (_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe())
-            //            // Send to the VI that the volunteer has disconnected
-            //            await Clients.Client(Context.ConnectionId).VolunteerDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VolunteerDisconnected].Value);
-            //        // Else it is a volunteer
-            //        else
-            //            // Send to the volunteer that the VI person has disconnected
-            //            await Clients.Client(Context.ConnectionId).VisuallyImpaireDisconnected(targetConnectionId, _stringLocalizer[Responses.Hub.VisuallyImpairedDisconnected].Value);
-
-            //        return false;
-            //    }
-
             (var isInACall, var otherConnectionId) = await _hubCacheService.IsInACallAsync(Context.ConnectionId);
 
             if (!isInACall)
