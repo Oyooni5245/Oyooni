@@ -470,9 +470,6 @@ Scripts/
 # mypy
 .mypy_cache/
 
-# AI models extensions
-*.h5
-
 # Admission Folders
 First Admission Presentation
 
