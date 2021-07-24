@@ -1,7 +1,5 @@
 import numpy as np
-import warnings
 import utils
-warnings.filterwarnings("ignore")
 
 import tensorflow as tf
 
@@ -31,15 +29,19 @@ def positional_encoding_2d(row, col, d_model):
     assert d_model % 2 == 0
     # first d_model/2 encode row embedding and second d_model/2 encode column embedding
     row_pos = np.repeat(np.arange(row), col)[:, np.newaxis]
-    col_pos = np.repeat(np.expand_dims(np.arange(col), 0), row, axis=0).reshape(-1, 1)
-    angle_rads_row = get_angles(row_pos, np.arange(d_model // 2)[np.newaxis, :], d_model // 2)
-    angle_rads_col = get_angles(col_pos, np.arange(d_model // 2)[np.newaxis, :], d_model // 2)
+    col_pos = np.repeat(np.expand_dims(np.arange(col), 0),
+                        row, axis=0).reshape(-1, 1)
+    angle_rads_row = get_angles(row_pos, np.arange(
+        d_model // 2)[np.newaxis, :], d_model // 2)
+    angle_rads_col = get_angles(col_pos, np.arange(
+        d_model // 2)[np.newaxis, :], d_model // 2)
     # apply sin and cos to odd and even indices resp.
     angle_rads_row[:, 0::2] = np.sin(angle_rads_row[:, 0::2])
     angle_rads_row[:, 1::2] = np.cos(angle_rads_row[:, 1::2])
     angle_rads_col[:, 0::2] = np.sin(angle_rads_col[:, 0::2])
     angle_rads_col[:, 1::2] = np.cos(angle_rads_col[:, 1::2])
-    pos_encoding = np.concatenate([angle_rads_row, angle_rads_col], axis=1)[np.newaxis, ...]
+    pos_encoding = np.concatenate([angle_rads_row, angle_rads_col], axis=1)[
+        np.newaxis, ...]
 
     return tf.cast(pos_encoding, dtype=tf.float32)
 
@@ -75,7 +77,8 @@ def scaled_dot_product_attention(q, k, v, mask):
       output, attention_weights
     """
 
-    matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
+    # (..., seq_len_q, seq_len_k)
+    matmul_qk = tf.matmul(q, k, transpose_b=True)
 
     # scale matmul_qk
     dk = tf.cast(tf.shape(k)[-1], tf.float32)
@@ -83,11 +86,13 @@ def scaled_dot_product_attention(q, k, v, mask):
 
     # add the mask to the scaled tensor.
     if mask is not None:
-        scaled_attention_logits += (mask * -1e9)  # adding -Inf where mask is 1 s.t. value get ignored in softmax
+        # adding -Inf where mask is 1 s.t. value get ignored in softmax
+        scaled_attention_logits += (mask * -1e9)
 
     # softmax is normalized on the last axis (seq_len_k) so that the scores
     # add up to 1.
-    attention_weights = tf.nn.softmax(scaled_attention_logits, axis=-1)  # (..., seq_len_q, seq_len_k)
+    attention_weights = tf.nn.softmax(
+        scaled_attention_logits, axis=-1)  # (..., seq_len_q, seq_len_k)
 
     output = tf.matmul(attention_weights, v)  # (..., seq_len_q, depth_v)
     return output, attention_weights
@@ -123,9 +128,12 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         k = self.wk(k)  # (batch_size, seq_len, d_model)
         v = self.wv(v)  # (batch_size, seq_len, d_model)
 
-        q = self.split_heads(q, batch_size)  # (batch_size, num_heads, seq_len_q, depth)
-        k = self.split_heads(k, batch_size)  # (batch_size, num_heads, seq_len_k, depth)
-        v = self.split_heads(v, batch_size)  # (batch_size, num_heads, seq_len_v, depth)
+        # (batch_size, num_heads, seq_len_q, depth)
+        q = self.split_heads(q, batch_size)
+        # (batch_size, num_heads, seq_len_k, depth)
+        k = self.split_heads(k, batch_size)
+        # (batch_size, num_heads, seq_len_v, depth)
+        v = self.split_heads(v, batch_size)
 
         # scaled_attention.shape == (batch_size, num_heads, seq_len_q, depth)
         # attention_weights.shape == (batch_size, num_heads, seq_len_q, seq_len_k)
@@ -138,14 +146,16 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         concat_attention = tf.reshape(scaled_attention,
                                       (batch_size, -1, self.d_model))  # (batch_size, seq_len_q, d_model)
 
-        output = self.dense(concat_attention)  # (batch_size, seq_len_q, d_model)
+        # (batch_size, seq_len_q, d_model)
+        output = self.dense(concat_attention)
 
         return output, attention_weights
 
 
 def point_wise_feed_forward_network(d_model, dff):
     return tf.keras.Sequential([
-        tf.keras.layers.Dense(dff, activation='relu'),  # (batch_size, seq_len, dff)
+        # (batch_size, seq_len, dff)
+        tf.keras.layers.Dense(dff, activation='relu'),
         tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
     ])
 
@@ -164,13 +174,16 @@ class EncoderLayer(tf.keras.layers.Layer):
         self.dropout2 = tf.keras.layers.Dropout(rate)
 
     def call(self, x, training, mask=None):
-        attn_output, _ = self.mha(x, x, x, mask)  # (batch_size, input_seq_len, d_model)
+        # (batch_size, input_seq_len, d_model)
+        attn_output, _ = self.mha(x, x, x, mask)
         attn_output = self.dropout1(attn_output, training=training)
-        out1 = self.layernorm1(x + attn_output)  # (batch_size, input_seq_len, d_model)
+        # (batch_size, input_seq_len, d_model)
+        out1 = self.layernorm1(x + attn_output)
 
         ffn_output = self.ffn(out1)  # (batch_size, input_seq_len, d_model)
         ffn_output = self.dropout2(ffn_output, training=training)
-        out2 = self.layernorm2(out1 + ffn_output)  # (batch_size, input_seq_len, d_model)
+        # (batch_size, input_seq_len, d_model)
+        out2 = self.layernorm2(out1 + ffn_output)
 
         return out2
 
@@ -197,7 +210,8 @@ class DecoderLayer(tf.keras.layers.Layer):
         # enc_output.shape == (batch_size, input_seq_len, d_model)
 
         # using look ahead mask so that during self attention current query dont consider future token
-        attn1, attn_weights_block1 = self.mha1(x, x, x, look_ahead_mask)  # (batch_size, target_seq_len, d_model)
+        # (batch_size, target_seq_len, d_model)
+        attn1, attn_weights_block1 = self.mha1(x, x, x, look_ahead_mask)
         attn1 = self.dropout1(attn1, training=training)
         out1 = self.layernorm1(attn1 + x)
 
@@ -205,11 +219,13 @@ class DecoderLayer(tf.keras.layers.Layer):
         attn2, attn_weights_block2 = self.mha2(
             enc_output, enc_output, out1, padding_mask)  # (batch_size, target_seq_len, d_model)
         attn2 = self.dropout2(attn2, training=training)
-        out2 = self.layernorm2(attn2 + out1)  # (batch_size, target_seq_len, d_model)
+        # (batch_size, target_seq_len, d_model)
+        out2 = self.layernorm2(attn2 + out1)
 
         ffn_output = self.ffn(out2)  # (batch_size, target_seq_len, d_model)
         ffn_output = self.dropout3(ffn_output, training=training)
-        out3 = self.layernorm3(ffn_output + out2)  # (batch_size, target_seq_len, d_model)
+        # (batch_size, target_seq_len, d_model)
+        out3 = self.layernorm3(ffn_output + out2)
 
         return out3, attn_weights_block1, attn_weights_block2
 
@@ -256,7 +272,8 @@ class Decoder(tf.keras.layers.Layer):
         self.num_layers = num_layers
 
         self.embedding = tf.keras.layers.Embedding(target_vocab_size, d_model)
-        self.pos_encoding = positional_encoding_1d(maximum_position_encoding, d_model)
+        self.pos_encoding = positional_encoding_1d(
+            maximum_position_encoding, d_model)
 
         self.dec_layers = [DecoderLayer(d_model, num_heads, dff, rate)
                            for _ in range(num_layers)]
@@ -289,7 +306,8 @@ class Transformer(tf.keras.Model):
                  target_vocab_size, max_pos_encoding, rate=0.1):
         super(Transformer, self).__init__()
 
-        self.encoder = Encoder(num_layers, d_model, num_heads, dff, row_size, col_size, rate)
+        self.encoder = Encoder(num_layers, d_model,
+                               num_heads, dff, row_size, col_size, rate)
 
         self.decoder = Decoder(num_layers, d_model, num_heads, dff,
                                target_vocab_size, max_pos_encoding, rate)
@@ -297,19 +315,21 @@ class Transformer(tf.keras.Model):
         self.final_layer = tf.keras.layers.Dense(target_vocab_size)
 
     def call(self, inp, tar, training, look_ahead_mask=None, dec_padding_mask=None, enc_padding_mask=None):
-        enc_output = self.encoder(inp, training, enc_padding_mask)  # (batch_size, inp_seq_len, d_model)
+        # (batch_size, inp_seq_len, d_model)
+        enc_output = self.encoder(inp, training, enc_padding_mask)
 
         # dec_output.shape == (batch_size, tar_seq_len, d_model)
         dec_output, attention_weights = self.decoder(
             tar, enc_output, training, look_ahead_mask, dec_padding_mask)
 
-        final_output = self.final_layer(dec_output)  # (batch_size, tar_seq_len, target_vocab_size)
+        # (batch_size, tar_seq_len, target_vocab_size)
+        final_output = self.final_layer(dec_output)
 
         return final_output, attention_weights
 
 
-
-pre_trained_model = tf.keras.applications.InceptionV3(include_top=False, weights="inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5")
+pre_trained_model = tf.keras.applications.InceptionV3(
+    include_top=False, weights="inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5")
 new_input = pre_trained_model.input
 hidden_layer = pre_trained_model.layers[-1].output
 image_features_extract_model = tf.keras.Model(new_input, hidden_layer)
@@ -327,22 +347,22 @@ target_vocab_size = 5000 + 1
 dropout_rate = 0.1
 
 # Initial (Dummy) Creation of Model
+
+
 def create_model():
-    dummy_image = np.zeros((299,299,3), np.float32)
+    dummy_image = np.zeros((299, 299, 3), np.float32)
     temp_input = tf.expand_dims(dummy_image, 0)
     img_tensor_val = image_features_extract_model(temp_input)
-    img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
+    img_tensor_val = tf.reshape(
+        img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
     start_token = tokenizer.word_index['<start>']
     decoder_input = [start_token]
     output = tf.expand_dims(decoder_input, 0)  # tokens
     dec_mask = utils.create_masks_decoder(output)
-    
+
     transformer = Transformer(num_layer, d_model, num_heads, dff, row_size, col_size, target_vocab_size, target_vocab_size,
                               dropout_rate)
-    predictions, attention_weights = transformer(img_tensor_val, output, False, dec_mask)
+    predictions, attention_weights = transformer(
+        img_tensor_val, output, False, dec_mask)
     transformer.load_weights("transformer_weights.h5")
     return transformer
-
-
-
-

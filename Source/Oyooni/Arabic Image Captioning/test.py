@@ -1,8 +1,7 @@
 import tensorflow as tf
 import model
 import utils
-import warnings
-warnings.filterwarnings("ignore")
+
 
 def evaluate(image, tokenizer, transformer):
     temp_input = tf.expand_dims(utils.load_image(image)[0], 0)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Oyooni.Server.Enumerations;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Oyooni.Server.Common
@@ -12,6 +13,11 @@ namespace Oyooni.Server.Common
         /// The message of the response
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public ApiResponse() { }
 
         /// <summary>
         /// Constructs a new instance of the <see cref="ApiResponse"/> class
@@ -96,6 +102,11 @@ namespace Oyooni.Server.Common
     public class ApiErrorResponse : ApiResponse
     {
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public ApiErrorResponse() { }
+
+        /// <summary>
         /// The details errors sent with the response
         /// </summary>
         public Dictionary<string, List<string>> Errors { get; set; }
@@ -105,5 +116,102 @@ namespace Oyooni.Server.Common
         /// </summary>
         public ApiErrorResponse(string message = null, Dictionary<string, List<string>> errors = null)
             : base(message) => Errors = errors ?? new Dictionary<string, List<string>>();
+    }
+
+    /// <summary>
+    /// Represents an image captioning api response
+    /// </summary>
+    public class ImageCaptioningResponse : ApiResponse
+    {
+        /// <summary>
+        /// The caption generated
+        /// </summary>
+        public string Caption { get; set; }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="ImageCaptioningResponse"/> using the passed parameters
+        /// </summary>
+        public ImageCaptioningResponse(string message, string caption) : base(message)
+        {
+            Caption = caption;
+        }
+    }
+
+    /// <summary>
+    /// Represents a banknote detection api response
+    /// </summary>
+    public class BankNoteDetectionResponse : ApiResponse
+    {
+        /// <summary>
+        /// The bank note that has been recognized
+        /// </summary>
+        public SyrianBankNoteTypes BankNoteType { get; set; }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public BankNoteDetectionResponse() { }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="BanknoteDetectionResponse"/> using the passed parameters
+        /// </summary>
+        public BankNoteDetectionResponse(string message, SyrianBankNoteTypes bankNoteType) : base(message)
+        {
+            BankNoteType = bankNoteType;
+        }
+    }
+
+    /// <summary>
+    /// Represents a color recognition api response
+    /// </summary>
+    public class ColorRecognitionResponse : ApiResponse
+    {
+        /// <summary>
+        /// The recognized color
+        /// </summary>
+        public RecognizedColor RecognizedColor { get; set; }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public ColorRecognitionResponse() { }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="ColorRecognitionResponse"/> using the passed parameters
+        /// </summary>
+        public ColorRecognitionResponse(string message, RecognizedColor recognizedColor) : base(message)
+        {
+            RecognizedColor = recognizedColor;
+        }
+    }
+
+    /// <summary>
+    /// Represents a text recognition api response
+    /// </summary>
+    public class TextRecognitionResponse : ApiResponse
+    {
+        /// <summary>
+        /// The recognized text
+        /// </summary>
+        public string[] RecognizedText { get; set; }
+
+        /// <summary>
+        /// The brand name or the main text recognized
+        /// </summary>
+        public string BrandName { get; set; }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public TextRecognitionResponse() { }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="TextRecognitionResponse"/> using the passed parameters
+        /// </summary>
+        public TextRecognitionResponse(string message, string[] recognizedText, string brandName) : base(message)
+        {
+            RecognizedText = recognizedText;
+            BrandName = brandName;
+        }
     }
 }

@@ -73,7 +73,9 @@ namespace Oyooni.Server.Commands.AI
 
                         // Return results
                         return caption;
-                    } catch (Exception) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                    } 
+                    catch (TimeoutException) { throw new ServiceUnavailableException(Responses.General.ServiceUnavailable); }
+                    catch (Exception) { throw new Exception(); }
                       finally { imageTempFile.Dispose(); }
                 }
             }

@@ -49,6 +49,7 @@ namespace Oyooni.Server.Constants
             public const string BankNoteDetectionSuccess = "Bank note has been recognized";
             public const string ColorRecognitionSuccess = "Colors have been recognized";
             public const string ImageCaptionedSuccess = "Image has been captioned successfully";
+            public const string TextRecognitionSuccess = "Text has been recognized in the image successfully";
         }
 
         public static class Hub

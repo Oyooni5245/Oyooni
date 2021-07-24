@@ -7,7 +7,7 @@ namespace Oyooni.Server.Common
     {
         protected string _pathToTempFile;
 
-        public string PathToTempFile { get; }
+        public string PathToTempFile => _pathToTempFile;
 
         public DisposableTempFile(string pathToTempFile)
         {
