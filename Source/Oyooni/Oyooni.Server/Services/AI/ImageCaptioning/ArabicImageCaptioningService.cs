@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
+using Oyooni.Server.Exceptions;
+using Oyooni.Server.Services.General;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -22,10 +24,16 @@ namespace Oyooni.Server.Services.AI.ImageCaptioning
         protected readonly HttpClient _httpClient;
 
         /// <summary>
+        /// The network service
+        /// </summary>
+        protected readonly INetworkService _networkService;
+
+        /// <summary>
         /// Constructs a new instance of the <see cref="SyrianBankNoteDetectionService"/> class using the passed parameters
         /// </summary>
-        public ArabicImageCaptioningService(IHttpClientFactory httpClientFactory)
-            => _httpClient = httpClientFactory.CreateClient(HttpClients.ImageCaptioningClient);
+        public ArabicImageCaptioningService(IHttpClientFactory httpClientFactory, INetworkService networkService)
+            => (_httpClient, _networkService) 
+            = (httpClientFactory.CreateClient(HttpClients.ImageCaptioningClient), networkService);
 
         /// <summary>
         /// Captions an image using the passed image path
@@ -34,6 +42,9 @@ namespace Oyooni.Server.Services.AI.ImageCaptioning
         /// <returns>Image caption</returns>
         public async Task<string> CaptionImageAsync(string imagePath, CancellationToken token = default)
         {
+            if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
+                throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
+
             // Call the image captioning service
             var result = await _httpClient.PostAsync("/caption-image",
                 new StringContent(JsonSerializer.Serialize(new

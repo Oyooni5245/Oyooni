@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
+using Oyooni.Server.Exceptions;
+using Oyooni.Server.Services.General;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -22,10 +24,16 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
         protected readonly HttpClient _httpClient;
 
         /// <summary>
+        /// The network service
+        /// </summary>
+        protected readonly INetworkService _networkService;
+
+        /// <summary>
         /// Constructs a new instance of the <see cref="TextRecognitionService"/> class using the passed parameters
         /// </summary>
-        public TextRecognitionService(IHttpClientFactory httpClientFactory)
-            => _httpClient = httpClientFactory.CreateClient(HttpClients.TextRecognitionClient);
+        public TextRecognitionService(IHttpClientFactory httpClientFactory, INetworkService networkService)
+            => (_httpClient, _networkService)
+            = (httpClientFactory.CreateClient(HttpClients.TextRecognitionClient), networkService);
 
         /// <summary>
         /// Recognizes the text in an image
@@ -33,6 +41,9 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
         /// <param name="imagePath">The image path</param>
         public async Task<(string, string[])> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default)
         {
+            if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
+                throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
+
             // Call the text recognizer service
             var result = await _httpClient.PostAsync("/recognize-text",
                 new StringContent(JsonSerializer.Serialize(new

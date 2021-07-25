@@ -3,6 +3,8 @@ using Newtonsoft.Json.Linq;
 using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
 using Oyooni.Server.Enumerations;
+using Oyooni.Server.Exceptions;
+using Oyooni.Server.Services.General;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -21,14 +23,20 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         /// <summary>
         /// The http client used to call the local server serving the color detection
         /// </summary>
-        protected readonly HttpClient _client;
+        protected readonly HttpClient _httpClient;
+
+        /// <summary>
+        /// The network service
+        /// </summary>
+        protected readonly INetworkService _networkService;
 
         /// <summary>
         /// Constructrs a new instance of the <see cref="ColorRecognitionService"/> class using the passed parameters
         /// </summary>
-        public ColorRecognitionService(IHttpClientFactory factory)
+        public ColorRecognitionService(IHttpClientFactory factory, INetworkService networkService)
         {
-            _client = factory.CreateClient(HttpClients.ColorRecognizerClient);
+            _httpClient = factory.CreateClient(HttpClients.ColorRecognizerClient);
+            _networkService = networkService;
         }
 
         /// <summary>
@@ -38,8 +46,11 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         /// <returns>The recongized dominant image</returns>
         public async Task<RecognizedColor> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default)
         {
+            if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
+                throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
+
             // Send a request to the local server with the image path
-            var response = await _client.PostAsync("/recognize-color",
+            var response = await _httpClient.PostAsync("/recognize-color",
                 new StringContent(JsonSerializer.Serialize(new
                 {
                     ImagePath = imagePath,

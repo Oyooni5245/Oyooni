@@ -3,6 +3,8 @@ using Newtonsoft.Json.Linq;
 using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
 using Oyooni.Server.Enumerations;
+using Oyooni.Server.Exceptions;
+using Oyooni.Server.Services.General;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -26,10 +28,18 @@ namespace Oyooni.Server.Services.AI.BankNoteDetection
         protected readonly HttpClient _httpClient;
 
         /// <summary>
+        /// The network service
+        /// </summary>
+        protected readonly INetworkService _networkService;
+
+        /// <summary>
         /// Constructs a new instance of the <see cref="SyrianBankNoteDetectionService"/> class using the passed parameters
         /// </summary>
-        public SyrianBankNoteDetectionService(IHttpClientFactory httpClientFactory)
-            => _httpClient = httpClientFactory.CreateClient(HttpClients.BankNoteDetectorClient);
+        public SyrianBankNoteDetectionService(IHttpClientFactory httpClientFactory, INetworkService networkService)
+        {
+            _httpClient = httpClientFactory.CreateClient(HttpClients.BankNoteDetectorClient);
+            _networkService = networkService;
+        }
 
         /// <summary>
         /// Recognizes a syrian bank note from an image data
@@ -37,6 +47,9 @@ namespace Oyooni.Server.Services.AI.BankNoteDetection
         /// <param name="base64ImageData">The image data to recognize the bank note from</param>
         public async Task<SyrianBankNoteTypes> DetectBankNoteAsync(string imagePath, CancellationToken token = default)
         {
+            if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
+                throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
+
             // Call the banknote detector service
             var result = await _httpClient.PostAsync("/detect-banknote",
                 new StringContent(JsonSerializer.Serialize(new

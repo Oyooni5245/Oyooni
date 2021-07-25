@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Oyooni.Server.Filters;
 using System.Reflection;
 
