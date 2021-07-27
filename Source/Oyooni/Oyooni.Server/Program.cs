@@ -14,7 +14,7 @@ namespace Oyooni.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("https://0.0.0.0:5001");
+                    webBuilder.UseUrls("https://localhost:5001");
                     webBuilder.UseKestrel();
                     // webBuilder.UseIISIntegration();
                     webBuilder.UseStartup<Startup>();
