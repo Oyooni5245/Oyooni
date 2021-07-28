@@ -225,7 +225,9 @@ namespace Oyooni.Server.Hubs
             var currentConnectionId = Context.ConnectionId;
 
             if (!await _hubCacheService.StillExistsAsync(currentConnectionId))
+            {
                 return false;
+            }
 
             var isVolunteer = !_loggedInUserSerivce.UserId.IsNullOrEmptyOrWhiteSpaceSafe();
 
@@ -273,10 +275,10 @@ namespace Oyooni.Server.Hubs
             if (electedVolunteers != null && electedVolunteers.Any())
             {
                 await Clients.Clients(electedVolunteers).CancelledHelpRequest(currentConnectionId, _stringLocalizer[Responses.Hub.VICancelledHelpRequest].Value);
-
-                // Remove the help request initiated by the VI
-                await _hubCacheService.RemoveHelpRequestAsync(currentConnectionId);
             }
+
+            // Remove the help request initiated by the VI
+            await _hubCacheService.RemoveHelpRequestAsync(currentConnectionId);
 
             return true;
         }
