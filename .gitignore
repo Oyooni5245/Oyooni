@@ -16,6 +16,10 @@ Notes for senior.txt
 *.userosscache
 *.sln.docstates
 
+# Powerpoint files
+*.ppt
+*.pptx
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -475,3 +479,8 @@ First Admission Presentation
 
 # Datasets folder
 Datasets
+
+# AI models weights files
+*.h5
+*.pth
+*.pt

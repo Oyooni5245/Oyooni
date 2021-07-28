@@ -15,9 +15,12 @@ class TextRecognizerService(Resource):
             json = request.get_json()
             image_path = json["ImagePath"]
             isDocument = bool(json["IsDocument"])
-            if not isDocument:
+            if isDocument == False:
                 brand_name, text = getTextFromImage(
                     image_path, net, refine_net)
+
+                # print("Predictions:\n\tBrand Name:",
+                #       brand_name, "\n\tText:", text, "\n")
 
                 return {
                     "brand_name": brand_name,
@@ -25,8 +28,9 @@ class TextRecognizerService(Resource):
                 }, 200
 
             else:
+                text = getText(image_path)
                 return {
-                    "text": getText(image_path)
+                    "text": text
                 }, 200
 
         except Exception as e:
@@ -39,4 +43,4 @@ api.add_resource(TextRecognizerService, "/recognize-text")
 
 if __name__ == "__main__":
     port = 5006
-    app.run(port=port)
+    app.run(debug=True, port=port)

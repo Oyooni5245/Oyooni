@@ -4,6 +4,7 @@ using Oyooni.Server.Attributes;
 using Oyooni.Server.Constants;
 using Oyooni.Server.Exceptions;
 using Oyooni.Server.Services.General;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -56,14 +57,22 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
             var rootJObject = JObject.Parse(await result.Content.ReadAsStringAsync(token));
 
             var brandName = string.Empty;
+            var text = new List<string>();
 
             if (rootJObject.ContainsKey("brand_name"))
+            {
                 brandName = rootJObject["brand_name"].Value<string>();
+                text = rootJObject["text"].ToObject<List<string>>();
+            }
+            else
+            {
+                var documentText = rootJObject["text"].ToObject<string>();
+                text.Add(documentText);
+            }
 
-            var text = rootJObject["text"].ToObject<string[]>();
 
             // return the result
-            return (brandName, text);
+            return (brandName, text.ToArray());
         }
     }
 }
