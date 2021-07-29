@@ -16,7 +16,7 @@ class TextRecognizerService(Resource):
             image_path = json["ImagePath"]
             isDocument = bool(json["IsDocument"])
             if isDocument == False:
-                brand_name, text = getTextFromImage(
+                brand_name, text, language = getTextFromImage(
                     image_path, net, refine_net)
 
                 # print("Predictions:\n\tBrand Name:",
@@ -24,13 +24,15 @@ class TextRecognizerService(Resource):
 
                 return {
                     "brand_name": brand_name,
-                    "text": text
+                    "text": text,
+                    "language": language
                 }, 200
 
             else:
-                text = getText(image_path)
+                text, language = getText(image_path)
                 return {
-                    "text": text
+                    "text": text,
+                    "language": language
                 }, 200
 
         except Exception as e:

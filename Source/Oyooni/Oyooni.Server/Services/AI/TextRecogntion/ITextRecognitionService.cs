@@ -12,6 +12,6 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
         /// Recognizes the text in an image
         /// </summary>
         /// <param name="imagePath">The image path</param>
-        Task<(string, string[])> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default);
+        Task<(string, string[], string)> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default);
     }
 }

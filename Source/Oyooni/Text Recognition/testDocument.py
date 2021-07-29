@@ -1,5 +1,6 @@
 import cv2
 import pytesseract
+from googletrans import Translator
 
 pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
@@ -25,4 +26,12 @@ def getText(imageUrl):
     fullTextList = []
     fullTextList.append(text)
     words = '+'.join([str(x) for x in fullTextList])
-    return words
+    language = "en"
+    try:
+        detector = Translator()
+        dec_lan = detector.detect(text)
+        language = dec_lan.lang
+    except:
+        language = "en"
+
+    return words, language

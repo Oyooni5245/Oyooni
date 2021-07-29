@@ -18,7 +18,7 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the request for the <see cref="RecognizeText"/> command
         /// </summary>
-        public class Request : IRequest<(string, string[])>
+        public class Request : IRequest<(string, string[], string)>
         {
             /// <summary>
             /// The file of the image to be used for recognizing the text
@@ -40,7 +40,7 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the handler for the <see cref="Request"/>
         /// </summary>
-        public class Handler : IRequestHandler<Request, (string, string[])>
+        public class Handler : IRequestHandler<Request, (string, string[], string)>
         {
             /// <summary>
             /// The visual question answering service
@@ -65,7 +65,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Handles when a <see cref="Request"/> is sent
             /// </summary>
-            public async Task<(string, string[])> Handle(Request request, CancellationToken token)
+            public async Task<(string, string[], string)> Handle(Request request, CancellationToken token)
             {
                 // Get a temp file of the image file passed   
                 using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))

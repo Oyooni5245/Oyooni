@@ -153,14 +153,17 @@ def convPosToImages(boxpositions, image):
 
 
 def checkLang(img):
-    custom_config = r'--oem 3 --psm 6'
-    currentImage = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    text = pytesseract.image_to_string(
-        currentImage, config=custom_config, lang='eng+ara')
-    # print("\n", text, "\n")
-    detector = Translator()
-    dec_lan = detector.detect(text)
-    return dec_lan.lang
+    try:
+        custom_config = r'--oem 3 --psm 6'
+        currentImage = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        text = pytesseract.image_to_string(
+            currentImage, config=custom_config, lang='eng+ara')
+        # print("\n", text, "\n")
+        detector = Translator()
+        dec_lan = detector.detect(text)
+        return dec_lan.lang
+    except:
+        return "en"
 
 
 def classifyBoxes(boxPositions):
@@ -321,6 +324,7 @@ def getTextFromImage(image_path, net, refine_net=None):
         net, image, config.text_threshold, config.link_threshold, config.low_text, config.cuda, config.poly, refine_net)
     # print("test net time : {}s".format(time.time() - testNetTime))
     boxPositions = []
+
     # gettCorTime = time.time()
     for box in (bboxes):
         # Get coordtinates for bounding boxes here
@@ -337,6 +341,7 @@ def getTextFromImage(image_path, net, refine_net=None):
     # mymethodTime = time.time()
     brand_name = ""
     text = ""
+    language = "en"
     if len(boxPositions) > 0:
 
         # Extract the boxpositions as images
@@ -345,10 +350,10 @@ def getTextFromImage(image_path, net, refine_net=None):
         # print("my method time: {}s".format(time.time() - mymethodTime))
         brand_name = getBrandText(croppedTextBoxImages[maxArea])
         Mainlang = checkLang(croppedTextBoxImages[maxArea])
+        language = Mainlang
         classifiedBoxes = classifyBoxes(boxPositions)
         classifiedBoxes = sortClassifiedBoxes(classifiedBoxes, Mainlang)
         boxPositions = convertDictToList(classifiedBoxes)
-
         # print(classifiedBoxes)
         # print("MinY MaxY MinX MaxX")
         # for pos in boxPositions:
@@ -373,7 +378,7 @@ def getTextFromImage(image_path, net, refine_net=None):
         # file_utils.saveResult(
         #     image_path, image[:, :, ::-1], polys, dirname=result_folder)
 
-    return brand_name, text
+    return brand_name, text, language
 
 
 # if __name__ == '__main__':

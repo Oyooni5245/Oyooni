@@ -40,7 +40,7 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
         /// Recognizes the text in an image
         /// </summary>
         /// <param name="imagePath">The image path</param>
-        public async Task<(string, string[])> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default)
+        public async Task<(string, string[], string)> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default)
         {
             if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
                 throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
@@ -57,12 +57,18 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
             var rootJObject = JObject.Parse(await result.Content.ReadAsStringAsync(token));
 
             var brandName = string.Empty;
+            var language = rootJObject["language"].ToObject<string>();
             var text = new List<string>();
 
             if (rootJObject.ContainsKey("brand_name"))
             {
                 brandName = rootJObject["brand_name"].Value<string>();
-                text = rootJObject["text"].ToObject<List<string>>();
+                var subTexts = rootJObject["text"].ToObject<List<string>>();
+
+                if (subTexts is null)
+                    text.Add(rootJObject["text"].ToObject<string>());
+                else
+                    text = subTexts;
             }
             else
             {
@@ -72,7 +78,7 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
 
 
             // return the result
-            return (brandName, text.ToArray());
+            return (brandName, text.ToArray(), language);
         }
     }
 }
