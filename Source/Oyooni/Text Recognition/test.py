@@ -100,19 +100,22 @@ def getFullText(imgs,path):
 """
 
 
-def getFullText(imgs):
+def getFullText(imgs, language, path):
     custom_config = r'--oem 3 --psm 6'
     fullText = ""
     for img in imgs:
         currentImage = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         currentText = pytesseract.image_to_string(
-            currentImage, config=custom_config, lang='eng+ara')
+            currentImage, config=custom_config, lang=('eng' if language == 'en' else 'ara'))
         currentText = currentText.strip()
         if(currentText):
             fullText += " "+currentText
     fullTextList = []
     fullTextList.append(fullText)
-    words = [str(x) for x in fullTextList]
+    with codecs.open(path, 'w', 'utf-8') as outfile:
+        outfile.write('+'.join([str(x) for x in fullTextList]))
+    with codecs.open(path, 'r', 'utf-8') as file:
+        words = file.readlines()
     return words
 
 
@@ -350,6 +353,7 @@ def getTextFromImage(image_path, net, refine_net=None):
         # print("my method time: {}s".format(time.time() - mymethodTime))
         brand_name = getBrandText(croppedTextBoxImages[maxArea])
         Mainlang = checkLang(croppedTextBoxImages[maxArea])
+        print("Main Language:", Mainlang)
         language = Mainlang
         classifiedBoxes = classifyBoxes(boxPositions)
         classifiedBoxes = sortClassifiedBoxes(classifiedBoxes, Mainlang)
@@ -366,7 +370,8 @@ def getTextFromImage(image_path, net, refine_net=None):
         # cv2.waitKey(0)
         # cv2.imwrite('croppedimage.jpg', img)
         # ocrStartT = time.time()
-        text = getFullText(convPosToImages(boxPositions, image))
+        text = getFullText(convPosToImages(
+            boxPositions, image), language, 'temp.json')
         # print("fulltext time : {}s".format(time.time() - ocrStartT))
 
         # save score text

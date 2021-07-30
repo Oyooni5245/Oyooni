@@ -63,12 +63,7 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
             if (rootJObject.ContainsKey("brand_name"))
             {
                 brandName = rootJObject["brand_name"].Value<string>();
-                var subTexts = rootJObject["text"].ToObject<List<string>>();
-
-                if (subTexts is null)
-                    text.Add(rootJObject["text"].ToObject<string>());
-                else
-                    text = subTexts;
+                text = rootJObject["text"].ToObject<List<string>>();
             }
             else
             {
