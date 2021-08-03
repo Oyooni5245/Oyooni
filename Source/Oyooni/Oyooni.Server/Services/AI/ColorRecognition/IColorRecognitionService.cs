@@ -14,6 +14,6 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         /// </summary>
         /// <param name="imagePath">The image path to recognize the color in</param>
         /// <returns>The recongized dominant image</returns>
-        Task<RecognizedColor> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default);
+        Task<string> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default);
     }
 }

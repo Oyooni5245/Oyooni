@@ -1,25 +1,17 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from color_classification_image import predict_color
+from detect import detectColors, get_color_dict
 
 app = Flask(__name__)
 api = Api(app)
 
-colorToIndex = {
-    'black': 0,
-    'white': 1,
-    'red': 2,
-    'orange': 3,
-    'green': 4,
-    'blue': 5,
-    'yellow': 6,
-}
+colorDict = get_color_dict()
 
 class ColorRecognizer(Resource):
     def post(self):
         image_path = request.get_json()['ImagePath']
-        prediction = predict_color(image_path)
-        return {"recognizedColor": colorToIndex[prediction]}, 200
+        detectedColor = detectColors(image_path, colorDict)
+        return {"recognizedColor": detectedColor}, 200
 
 
 api.add_resource(ColorRecognizer, "/recognize-color")

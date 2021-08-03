@@ -10,7 +10,6 @@ import torch.nn.functional as F
 
 from basenet.vgg16_bn import vgg16_bn, init_weights
 
-
 class double_conv(nn.Module):
     def __init__(self, in_ch, mid_ch, out_ch):
         super(double_conv, self).__init__()
@@ -55,7 +54,7 @@ class CRAFT(nn.Module):
         init_weights(self.upconv3.modules())
         init_weights(self.upconv4.modules())
         init_weights(self.conv_cls.modules())
-
+        
     def forward(self, x):
         """ Base network """
         sources = self.basenet(x)
@@ -64,26 +63,23 @@ class CRAFT(nn.Module):
         y = torch.cat([sources[0], sources[1]], dim=1)
         y = self.upconv1(y)
 
-        y = F.interpolate(y, size=sources[2].size()[
-                          2:], mode='bilinear', align_corners=False)
+        y = F.interpolate(y, size=sources[2].size()[2:], mode='bilinear', align_corners=False)
         y = torch.cat([y, sources[2]], dim=1)
         y = self.upconv2(y)
 
-        y = F.interpolate(y, size=sources[3].size()[
-                          2:], mode='bilinear', align_corners=False)
+        y = F.interpolate(y, size=sources[3].size()[2:], mode='bilinear', align_corners=False)
         y = torch.cat([y, sources[3]], dim=1)
         y = self.upconv3(y)
 
-        y = F.interpolate(y, size=sources[4].size()[
-                          2:], mode='bilinear', align_corners=False)
+        y = F.interpolate(y, size=sources[4].size()[2:], mode='bilinear', align_corners=False)
         y = torch.cat([y, sources[4]], dim=1)
         feature = self.upconv4(y)
 
         y = self.conv_cls(feature)
 
-        return y.permute(0, 2, 3, 1), feature
+        return y.permute(0,2,3,1), feature
 
-# if __name__ == '__main__':
-#     model = CRAFT(pretrained=True).cuda()
-#     output, _ = model(torch.randn(1, 3, 768, 768).cuda())
-#     print(output.shape)
+if __name__ == '__main__':
+    model = CRAFT(pretrained=True).cuda()
+    output, _ = model(torch.randn(1, 3, 768, 768).cuda())
+    print(output.shape)

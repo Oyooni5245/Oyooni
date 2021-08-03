@@ -18,7 +18,7 @@ class BanknoteDetectorService(Resource):
             results = get_results(input, model)
             results = map_results(results)
             return {
-                "result": map_to_server_type(results[0][0] if len(results) > 0 else "")
+                "result": map_to_server_type(results[0][0] if len(results) > 0 else "Undefinded")
             }, 200
         except Exception as e:
             return {

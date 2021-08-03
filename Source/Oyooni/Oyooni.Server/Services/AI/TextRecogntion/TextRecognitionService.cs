@@ -40,7 +40,7 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
         /// Recognizes the text in an image
         /// </summary>
         /// <param name="imagePath">The image path</param>
-        public async Task<(string, string[], string)> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default)
+        public async Task<(string, string[], string, string, string)> RecognizeTextAsync(string imagePath, bool isDocument = false, CancellationToken token = default)
         {
             if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
                 throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
@@ -58,22 +58,39 @@ namespace Oyooni.Server.Services.AI.TextRecogntion
 
             var brandName = string.Empty;
             var language = rootJObject["language"].ToObject<string>();
-            var text = new List<string>();
+            var fullText = new List<string>();
+            var arabicText = string.Empty;
+            var englishText = string.Empty;
 
-            if (rootJObject.ContainsKey("brand_name"))
+            if (rootJObject.ContainsKey("texts"))
             {
                 brandName = rootJObject["brand_name"].Value<string>();
-                text = rootJObject["text"].ToObject<List<string>>();
+                var textsNode = rootJObject["texts"];
+                englishText = textsNode["en"].ToObject<string>();
+                arabicText = textsNode["ar"].ToObject<string>();
+
+                if (textsNode["full_text"].Type == JTokenType.Array)
+                    fullText = textsNode["full_text"].ToObject<List<string>>();
+                else if (textsNode["full_text"].Type == JTokenType.String)
+                {
+                    var subText = textsNode["full_text"].ToObject<string>();
+                    fullText.Add(subText);
+                }
             }
             else
             {
-                var documentText = rootJObject["text"].ToObject<string>();
-                text.Add(documentText);
+                if (rootJObject["text"].Type == JTokenType.Array)
+                    fullText = rootJObject["text"].ToObject<List<string>>();
+                else if (rootJObject["text"].Type == JTokenType.String)
+                {
+                    var subText = rootJObject["text"].ToObject<string>();
+                    fullText.Add(subText);
+                }
             }
 
 
             // return the result
-            return (brandName, text.ToArray(), language);
+            return (brandName, fullText.ToArray(), language, englishText, arabicText);
         }
     }
 }

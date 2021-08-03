@@ -68,10 +68,12 @@ namespace Oyooni.Server.Controllers
         public async Task<IActionResult> RecognizeText([FromForm] RecognizeTextRequest request, CancellationToken token = default)
         {
             // Send a command to caption the image
-            (var brandName, var subText, var language)= await _mediator.Send(request.ToMediatorRequest(), token);
+            (var brandName, var subText, var language, string englishText, string arabicText)
+                = await _mediator.Send(request.ToMediatorRequest(), token);
 
             // Return the result
-            return ApiOk(Responses.AI.TextRecognitionSuccess, new TextRecognitionDto(subText, brandName, language));
+            return ApiOk(Responses.AI.TextRecognitionSuccess,
+                new TextRecognitionDto(subText, brandName, language, englishText, arabicText));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the request for the <see cref="RecognizeColors"/> command
         /// </summary>
-        public class Request : IRequest<RecognizedColor>
+        public class Request : IRequest<string>
         {
             /// <summary>
             /// The image file containing the colors to be recognized
@@ -38,7 +38,7 @@ namespace Oyooni.Server.Commands.AI
         /// <summary>
         /// Represents the handler for the <see cref="Request"/>
         /// </summary>
-        public class Handler : IRequestHandler<Request, RecognizedColor>
+        public class Handler : IRequestHandler<Request, string>
         {
             /// <summary>
             /// The color recognizer service
@@ -63,7 +63,7 @@ namespace Oyooni.Server.Commands.AI
             /// <summary>
             /// Handles when a <see cref="Request"/> is sent
             /// </summary>
-            public async Task<RecognizedColor> Handle(Request request, CancellationToken token = default)
+            public async Task<string> Handle(Request request, CancellationToken token = default)
             {
                 // Get a temp file of the image file passed
                 using (var imageTempFile = await _imageService.GetTempFileOfImage(request.ImageFile, token))

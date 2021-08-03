@@ -8,7 +8,17 @@
         /// <summary>
         /// The recognized text
         /// </summary>
-        public string[] RecognizedText { get; set; }
+        public string[] RecognizedFullText { get; set; }
+
+        /// <summary>
+        /// The recognized arabic text
+        /// </summary>
+        public string ArabicText { get; set; }
+
+        /// <summary>
+        /// The recognized english text
+        /// </summary>
+        public string EnglishText { get; set; }
 
         /// <summary>
         /// The brand name or the main text recognized
@@ -28,11 +38,13 @@
         /// <summary>
         /// Constructs a new instance of the <see cref="TextRecognitionDto"/> using the passed parameters
         /// </summary>
-        public TextRecognitionDto(string[] recognizedText, string brandName, string language)
+        public TextRecognitionDto(string[] recognizedFullText, string brandName, string language, string englishText, string arabicEnglish)
         {
-            RecognizedText = recognizedText;
+            RecognizedFullText = recognizedFullText;
             BrandName = brandName;
             Language = language;
+            EnglishText = englishText;
+            ArabicText = arabicEnglish;
         }
     }
 }

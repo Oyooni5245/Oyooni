@@ -10,7 +10,7 @@ namespace Oyooni.Server.Dtos.AI
         /// <summary>
         /// The recognized color
         /// </summary>
-        public RecognizedColor RecognizedColor { get; set; }
+        public string RecognizedColor { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -20,7 +20,7 @@ namespace Oyooni.Server.Dtos.AI
         /// <summary>
         /// Constructs a new instance of the <see cref="ColorRecognitionDto"/> using the passed parameters
         /// </summary>
-        public ColorRecognitionDto(RecognizedColor recognizedColor)
+        public ColorRecognitionDto(string recognizedColor)
         {
             RecognizedColor = recognizedColor;
         }

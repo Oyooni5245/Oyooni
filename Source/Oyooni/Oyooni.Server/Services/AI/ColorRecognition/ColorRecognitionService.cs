@@ -44,7 +44,7 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
         /// </summary>
         /// <param name="imagePath">The image path to recognize the color in</param>
         /// <returns>The recongized dominant image</returns>
-        public async Task<RecognizedColor> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default)
+        public async Task<string> RecognizeColorInImageAsync(string imagePath, CancellationToken token = default)
         {
             if (!_networkService.IsPortInUse(_httpClient.BaseAddress.Port))
                 throw new ServiceUnavailableException(Responses.General.ServiceUnavailable);
@@ -57,10 +57,10 @@ namespace Oyooni.Server.Services.AI.ColorRecognition
                 }), Encoding.UTF8, "application/json"), token);
 
             // Parse the response
-            var rootJObject = JObject.Parse(await response.Content.ReadAsStringAsync(token));
+            var recognizedColor = JObject.Parse(await response.Content.ReadAsStringAsync(token))["recognizedColor"].Value<string>();
 
             // Return the dictionary
-            return (RecognizedColor)rootJObject["recognizedColor"].Value<int>();
+            return recognizedColor;
         }
     }
 }
